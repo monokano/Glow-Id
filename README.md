@@ -4,8 +4,7 @@ InDesignのファイルがどのバージョンのInDesign.appで保存された
 
 [Xojo](https://www.xojo.com/)のビルトイン機能のみで作成したので、Xojoとそのライセンスがあれば誰でも容易にビルド可能です。ちなみに、作者は最も安価なLite版のライセンスです。
 
-ビルドしたアプリは下記でダウンロードできます。
-[Glee & Glow | macOS & InDesign](https://tama-san.com/glee-glow-id/)
+ビルドしたアプリは [Glee & Glow | macOS & InDesign](https://tama-san.com/glee-glow-id/) でダウンロードできます。
 
 ## 開発環境
 Xojo 2020r1.1
