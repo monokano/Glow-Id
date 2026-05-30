@@ -1,0 +1,127 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Adobe InDesign Book" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign Book"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign ブック"
+          }
+        }
+      }
+    },
+    "Adobe InDesign Document" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign Document"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign 書類"
+          }
+        }
+      }
+    },
+    "Adobe InDesign Library" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign Library"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign ライブラリ"
+          }
+        }
+      }
+    },
+    "Adobe InDesign Markup Language" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign Markup Language"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign Markup Language"
+          }
+        }
+      }
+    },
+    "Adobe InDesign Template" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign Template"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign テンプレート"
+          }
+        }
+      }
+    },
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Glow Id"
+          }
+        }
+      }
+    },
+    "NSAppleEventsUsageDescription" : {
+      "comment" : "Privacy - AppleEvents Sending Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "To copy icon files from Adobe InDesign with administrator privileges."
+          }
+        }
+      }
+    },
+    "NSHumanReadableCopyright" : {
+      "comment" : "Copyright (human-readable)",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "© 2010-2026 monokano"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}

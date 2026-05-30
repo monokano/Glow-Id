@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="AppleTitle" content="使い方">
+<title>使い方</title>
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+<p class="breadcrumb"><a href="index.html">Glow Id ヘルプ</a> › 使い方</p>
+<h1>使い方</h1>
+
+<h2>ファイルを開く</h2>
+
+<h3>方法 1：ダブルクリック（推奨）</h3>
+<p>Glow Id を一度起動すると、.indd / .indt / .indb / .indl / .idml ファイルが Glow Id に自動的に関連付けられます。以降はファイルをダブルクリックするだけで Glow Id が起動し、バージョンを判定して適切な InDesign で開きます。</p>
+<ol class="steps">
+  <li>.indd / .indt / .indb / .indl / .idml ファイルをダブルクリックします。</li>
+  <li>Glow Id が起動し、ファイルのバージョンを判定します。</li>
+  <li>バージョンが一致する InDesign が見つかれば自動的に開きます。見つからない場合や、確認が必要な場合は<a href="03_notification.html">通知ウインドウ</a>が表示されます。</li>
+</ol>
+
+<div class="note">
+  <strong>ヒント</strong>
+  ダブルクリックで Glow Id が起動しない場合は、設定の「<a href="04_preferences.html">起動時に関連付けをする</a>」がオフになっている可能性があります。オンにするだけで Glow Id と関連付けされます。
+</div>
+
+<h3>方法 2：Dock アイコンにドロップ</h3>
+<ol class="steps">
+  <li>Dock に表示されている Glow Id のアイコンに、ファイルをドラッグ＆ドロップします。</li>
+  <li>ファイルのバージョンが判定され、一致する InDesign が自動的に起動します。</li>
+  <li>バージョンが一致するアプリが見つからない場合や、確認が必要な場合は<a href="03_notification.html">通知ウインドウ</a>が表示されます。</li>
+</ol>
+
+<h3>方法 3：メニューから開く</h3>
+<ol class="steps">
+  <li>メニューバーの「ファイル」→「開く…」（<kbd>⌘O</kbd>）をクリックします。</li>
+  <li>ファイル選択ダイアログでファイルを選びます。複数ファイルを同時に選択できます。</li>
+</ol>
+
+<h2>IDML ファイルについて</h2>
+<p>IDML は異なる下位バージョンで開くためのファイル形式なので、常に通知ウインドウが表示されます。警告も表示されません。開くバージョンの InDesign を選択してください。</p>
+
+<h2>複数ファイルをまとめて処理する</h2>
+<p>複数のファイルを一度に開くと、1ファイルずつ順番に処理します。通知ウインドウが表示される場合は、1つのウインドウを閉じてから次のウインドウが表示されます。処理が終わってからまとめて InDesign で開きます。</p>
+
+<h2>⌘ キーを押しながら開く</h2>
+<p>バージョンが一致する InDesign が見つかった場合、通常は自動的に開きます。<kbd>⌘</kbd>（Command）キーを押しながらファイルを開くと、バージョンが一致していても通知ウインドウを表示します。</p>
+
+<h2>Glow Id は自動で終了する</h2>
+<p>ファイルを開いた後、Glow Id は自動的に終了します。InDesign の作業中に Glow Id を手動で終了する必要はありません。</p>
+
+<div class="note">
+  <strong>ヒント</strong>
+  通知ウインドウの「終了」ボタンを使うと、現在起動中の InDesign を Glow Id から終了させることができます。
+</div>
+
+<h2>インストール後・アップデート後の初回起動</h2>
+<p>Glow Id をインストールした後、またはアップデートで差し替えた後は、<strong>必ず一度 Glow Id を起動してください。</strong></p>
+<p>アップデートで差し替えると .indd / .indt / .indb / .indl / .idml ファイルとの関連付けが外れることがあります。Glow Id を起動するだけで自動的に復元されます。</p>
+<p>また、次のいずれかに該当するとき、起動時に InDesign のファイルアイコンを自動で取り込みます：</p>
+<ul>
+  <li>インストールされている InDesign の最上位バージョン（Beta・Prerelease 除く）が変わったとき</li>
+  <li>Glow Id 自体が新しいバージョンになったとき</li>
+</ul>
+<p>取り込みに管理者権限が必要な場合は、パスワードの入力を求めます。</p>
+</body>
+</html>

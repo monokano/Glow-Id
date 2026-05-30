@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="AppleTitle" content="Preferences">
+<title>Preferences</title>
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+<p class="breadcrumb"><a href="index.html">Glow Id Help</a> › Preferences</p>
+<h1>Preferences</h1>
+
+<p>Open the Preferences window from the menu bar: <strong>Glow Id &gt; Preferences…</strong></p>
+
+<h2>Always show Notification Window</h2>
+<p>When enabled, the Notification Window always appears — even when a perfectly matching version of InDesign is found — so you can choose the app manually every time.</p>
+<p>Default: Off (opens automatically when a matching version is found)</p>
+
+<div class="note">
+  <strong>Tip</strong>
+  To show the Notification Window just once without changing this setting, hold <kbd>⌘</kbd> (Command) while opening the file (or choose Open from the right-click menu).
+</div>
+
+<h2>Associate file types on launch (.indd / .indt / .indb / .indl / .idml)</h2>
+<p>Default: On</p>
+<p><strong>When on:</strong> Every time Glow Id launches, it re-registers itself as the default app for .indd / .indt / .indb / .indl / .idml files. Double-clicking those files will launch Glow Id. If another app changes the association, Glow Id automatically reclaims it on the next launch.</p>
+<p><strong>When turned off:</strong> At the moment you turn it off, the association is changed to the highest installed version of InDesign (including Beta and Prerelease). Double-clicking those files will launch that InDesign directly, bypassing Glow Id. Use this setting when you want to restore the normal InDesign file association without going through Glow Id.</p>
+
+<div class="note">
+  <strong>Tip</strong>
+  If double-clicking no longer launches Glow Id, check whether this option has been turned off. Turning it back on immediately re-associates the file types with Glow Id.
+</div>
+
+<h2>InDesign Document (.indd) Detection Version</h2>
+<p>Controls how version information is read from .indd / .indt files and how it is displayed in the Notification Window.</p>
+<dl>
+  <dt>Major + Minor (Header)</dt>
+  <dd>Reads and displays the version as two digits — for example, "20.5". Only the beginning of the file is read, so processing is fast. This is sufficient for everyday use.<br>
+    For CS6 (8) through CC 2018 (13), the full version is always retrieved internally, since the minor version may be affected by a bug that prevents it from updating correctly. The Notification Window still displays only the major.minor format.</dd>
+
+  <dt>Full Version (Document History)</dt>
+  <dd>Reads and displays all four version digits — for example, "20.5.0.123". This requires a deeper analysis of the file's internal structure and takes slightly longer. Use this when you need to verify the exact build number.</dd>
+</dl>
+<p>This setting only affects .indd and .indt files. The display for .indb, .indl, and .idml files is not affected.</p>
+
+<h2>Version Matching</h2>
+<p>How the file's creation version is compared against installed InDesign apps depends on the file type.</p>
+<dl>
+  <dt>Document (.indd) / Template (.indt)</dt>
+  <dd>Matched by major.minor version. Regardless of the Detection Version setting above, matching always uses major.minor.</dd>
+  <dt>Book (.indb)</dt>
+  <dd>Matched by major.minor version.</dd>
+  <dt>Library (.indl)</dt>
+  <dd>Matched by major.minor version by default. For CS6 (8) through CC 2018 (13), matched by major version only.</dd>
+  <dt>IDML (.idml)</dt>
+  <dd>No version matching. The Notification Window always appears so you can choose which version to open.</dd>
+</dl>
+</body>
+</html>

@@ -1,0 +1,362 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Allow opening in higher version" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上位バージョンで開くのを許可する"
+          }
+        }
+      }
+    },
+    "Always show notification window (do not open automatically)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "常に通知ウインドウを表示する"
+          }
+        }
+      }
+    },
+    "Another InDesign.app is already running" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Another InDesign.app \nis already running"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "別バージョンの InDesign が\n起動しています"
+          }
+        }
+      }
+    },
+    "Application" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アプリケーション"
+          }
+        }
+      }
+    },
+    "Associate file types on launch (.indd / .indt / .indb / .indl / .idml)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "起動時に関連付けをする（.indd / .indt / .indb / .indl / .idml）"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
+        }
+      }
+    },
+    "Change Log" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "更新履歴"
+          }
+        }
+      }
+    },
+    "Extension does not match" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拡張子が一致していません"
+          }
+        }
+      }
+    },
+    "Failed to import icon files from InDesign %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign %@ からアイコンファイルを取得できませんでした"
+          }
+        }
+      }
+    },
+    "Full Version (Document History)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "フルバージョン （ドキュメントヒストリー）"
+          }
+        }
+      }
+    },
+    "Glow Id - Notification" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id - 通知"
+          }
+        }
+      }
+    },
+    "Glow Id Help" : {
+      "comment" : "Help window title",
+      "extractionState" : "manual",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id ヘルプ"
+          }
+        }
+      }
+    },
+    "Glow Id Preferences" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id 設定"
+          }
+        }
+      }
+    },
+    "Icon files imported from InDesign %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign %@ からアイコンファイルを取得しました"
+          }
+        }
+      }
+    },
+    "InDesign Book (.indb)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign ブック（.indb）"
+          }
+        }
+      }
+    },
+    "InDesign Document (.indd)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign ドキュメント（.indd）"
+          }
+        }
+      }
+    },
+    "InDesign Library (.indl)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign ライブラリ（.indl）"
+          }
+        }
+      }
+    },
+    "InDesign Markup (.idml)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign Markup (.idml)"
+          }
+        }
+      }
+    },
+    "InDesign Template (.indt)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign テンプレート（.indt）"
+          }
+        }
+      }
+    },
+    "Major + Minor (Header)" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メジャー＋マイナー （ヘッダー）"
+          }
+        }
+      }
+    },
+    "No InDesign.app with matching major version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No InDesign.app \nwith matching major version"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "同じメジャーバージョンの\nInDesign がありません"
+          }
+        }
+      }
+    },
+    "No InDesign.app with matching minor version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No InDesign.app \nwith matching minor version"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "マイナーバージョンが一致している\nInDesign がありません"
+          }
+        }
+      }
+    },
+    "Not an InDesign file" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign ファイルではありません"
+          }
+        }
+      }
+    },
+    "Open" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開く"
+          }
+        }
+      }
+    },
+    "Open with %@" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ で開く"
+          }
+        }
+      }
+    },
+    "Open…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開く…"
+          }
+        }
+      }
+    },
+    "Preferences…" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定…"
+          }
+        }
+      }
+    },
+    "Quit" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "終了"
+          }
+        }
+      }
+    },
+    "Status" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "状態"
+          }
+        }
+      }
+    },
+    "System Requirement" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "システム要件"
+          }
+        }
+      }
+    },
+    "Version" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バージョン"
+          }
+        }
+      }
+    },
+    "Version detection for InDesign documents (.indd):" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "InDesign ドキュメント（.indd）の検出バージョン："
+          }
+        }
+      }
+    },
+    "Version info cannot be detected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version info \ncannot be detected"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バージョン情報を\n検出できませんでした"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

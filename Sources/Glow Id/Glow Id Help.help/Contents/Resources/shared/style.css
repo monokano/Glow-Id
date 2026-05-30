@@ -1,0 +1,228 @@
+/* Glow Ai Help Book — Shared Stylesheet */
+
+:root {
+    --bg:          #ffffff;
+    --text:        #1d1d1f;
+    --heading:     #1d1d1f;
+    --link:        #0066cc;
+    --link-hover:  #0044aa;
+    --accent:      #f5f5f7;
+    --border:      #d2d2d7;
+    --note-bg:     #f0f4ff;
+    --note-border: #a0b4e8;
+    --warn-bg:     #fff4f0;
+    --warn-border: #e8a090;
+    --code-bg:     #f5f5f7;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg:          #1c1c1e;
+        --text:        #f5f5f7;
+        --heading:     #f5f5f7;
+        --link:        #409cff;
+        --link-hover:  #6fb6ff;
+        --accent:      #2c2c2e;
+        --border:      #3a3a3c;
+        --note-bg:     #1e2840;
+        --note-border: #4060a8;
+        --warn-bg:     #3a1a10;
+        --warn-border: #a84030;
+        --code-bg:     #2c2c2e;
+    }
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    padding: 28px 32px 48px;
+    max-width: 720px;
+}
+
+/* ── Typography ── */
+h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: 6px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--heading);
+    margin-top: 32px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--heading);
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+p {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+a {
+    color: var(--link);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--link-hover);
+    text-decoration: underline;
+}
+
+/* ── Index / TOC ── */
+.toc {
+    list-style: none;
+    margin-top: 20px;
+}
+
+.toc li {
+    border-bottom: 1px solid var(--border);
+}
+
+.toc li:first-child {
+    border-top: 1px solid var(--border);
+}
+
+.toc a {
+    display: block;
+    padding: 10px 4px;
+    font-size: 14px;
+}
+
+.toc .desc {
+    display: block;
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.6;
+    margin-top: 1px;
+}
+
+/* ── Note / Warning boxes ── */
+.note, .warning {
+    border-left: 3px solid;
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin: 16px 0;
+}
+
+.note {
+    background: var(--note-bg);
+    border-color: var(--note-border);
+}
+
+.warning {
+    background: var(--warn-bg);
+    border-color: var(--warn-border);
+}
+
+.note strong, .warning strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.7;
+}
+
+/* ── Definition list ── */
+dl {
+    margin-top: 10px;
+}
+
+dt {
+    font-weight: 600;
+    margin-top: 14px;
+}
+
+dd {
+    margin-left: 16px;
+    margin-top: 2px;
+    opacity: 0.9;
+}
+
+/* ── Keyboard shortcut ── */
+kbd {
+    display: inline-block;
+    font-family: -apple-system, sans-serif;
+    font-size: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    white-space: nowrap;
+}
+
+/* ── Bullet list ── */
+ul:not(.toc) {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+}
+
+ul:not(.toc) li {
+    margin-bottom: 6px;
+}
+
+/* ── Step list ── */
+ol.steps {
+    counter-reset: step;
+    list-style: none;
+    margin-top: 12px;
+    padding-left: 0;
+}
+
+ol.steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 34px;
+    margin-bottom: 12px;
+    min-height: 24px;
+}
+
+ol.steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--link);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+    font-size: 12px;
+    margin-bottom: 18px;
+    opacity: 0.6;
+}
+
+.breadcrumb a {
+    color: inherit;
+}

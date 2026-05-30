@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="AppleTitle" content="Notification Window">
+<title>Notification Window</title>
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+<p class="breadcrumb"><a href="index.html">Glow Id Help</a> › Notification Window</p>
+<h1>Notification Window</h1>
+
+<p>The Notification Window appears when no matching version of InDesign is found, when the file requires manual review before opening, or when an IDML file is opened.</p>
+
+<h2>File Information</h2>
+
+<h3>Icon</h3>
+<p>Shows the icon of the dropped file. A warning badge may appear above the icon, and a kind badge may appear to its left.</p>
+
+<h3>Badge</h3>
+<p>Displays a warning message or file type label when needed.</p>
+<dl>
+  <dt>Warning badge (above the icon)</dt>
+  <dd>Reports the file's status. Shown when no matching version of InDesign is installed, or when another version of InDesign is already running.</dd>
+  <dt>Kind badge (to the left of the icon, red)</dt>
+  <dd>Shown when the file extension does not match the file content, or when the file cannot be identified as an InDesign file.</dd>
+</dl>
+
+<h3>Filename</h3>
+<p>The name of the dropped file.</p>
+
+<h3>File Type</h3>
+<p>The file type as determined from the file's content.<br>
+Example: InDesign Document (.indd)</p>
+
+<h3>Creation Version</h3>
+<p>The InDesign version that created the file, as read from the file's internal data, displayed as an app name.<br>
+Example: InDesign 2025 (20.5)</p>
+
+<h3>Version Matching</h3>
+<p>How the file's creation version is compared against installed InDesign apps depends on the file type.</p>
+<ul>
+  <li><strong>Document (.indd) / Template (.indt) / Book (.indb)</strong>: Matched by major.minor version</li>
+  <li><strong>Library (.indl)</strong>: Matched by major.minor version by default. For CS6 (8) through CC 2018 (13), matched by major version only</li>
+  <li><strong>IDML (.idml)</strong>: No version matching. The Notification Window always appears so you can choose which version to open</li>
+</ul>
+
+<h2>App List</h2>
+<p>Lists all versions of InDesign installed on your Mac, sorted from oldest to newest.</p>
+<dl>
+  <dt>Blue dot (●)</dt>
+  <dd>Indicates the app is currently running.</dd>
+
+  <dt>App name</dt>
+  <dd>The name of the installed app. Beta and Prerelease builds are always greyed out to prevent accidental use in production. Versions of InDesign older than the file's creation version are also greyed out.</dd>
+</dl>
+
+<h3>Opening a File from the List</h3>
+<p>Double-click a row to open the file with that version of InDesign. Alternatively, select a row and click the "Open" button. Double-clicking a greyed-out row shows an "Open" menu item that lets you force-open the file.</p>
+
+<h2>Buttons</h2>
+<dl>
+  <dt>Open</dt>
+  <dd>Opens the file with the selected app.</dd>
+  <dt>Cancel</dt>
+  <dd>Closes the window without opening the file.</dd>
+  <dt>Quit</dt>
+  <dd>Quits the currently running InDesign. The blue dot disappears once InDesign has actually terminated.</dd>
+</dl>
+
+<h2>Checkbox</h2>
+<dl>
+  <dt>Open with newer version</dt>
+  <dd>When checked, versions of InDesign newer than the creation version become available for opening the file. When unchecked, newer version rows are greyed out. This setting is remembered across sessions.</dd>
+</dl>
+</body>
+</html>

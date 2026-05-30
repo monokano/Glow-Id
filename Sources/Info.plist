@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2010-2026 monokano</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>To copy icon files from Adobe InDesign with administrator privileges.</string>
+
+	<!-- InDesign 系 UTI をシステムに登録 -->
+	<key>UTImportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.adobe.indesign-document</string>
+			<key>UTTypeDescription</key>
+			<string>Adobe InDesign Document</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>indd</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.adobe.indesign-template</string>
+			<key>UTTypeDescription</key>
+			<string>Adobe InDesign Template</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>indt</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.adobe.indesign-book</string>
+			<key>UTTypeDescription</key>
+			<string>Adobe InDesign Book</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>indb</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.adobe.indesign-library</string>
+			<key>UTTypeDescription</key>
+			<string>Adobe InDesign Library</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>indl</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.adobe.indesign.idml</string>
+			<key>UTTypeDescription</key>
+			<string>Adobe InDesign Markup Language</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>idml</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+
+	<!-- ドロップ受付のためのドキュメントタイプ宣言 -->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<!-- InDesign Document (.indd) -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Adobe InDesign Document</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>ID_Document_Icon</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.indesign-document</string>
+			</array>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>indd</string>
+			</array>
+		</dict>
+		<!-- InDesign Template (.indt) -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Adobe InDesign Template</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>ID_Stationary_Icon</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.indesign-template</string>
+			</array>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>indt</string>
+			</array>
+		</dict>
+		<!-- InDesign Book (.indb) -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Adobe InDesign Book</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>ID_Book_Icon</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.indesign-book</string>
+			</array>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>indb</string>
+			</array>
+		</dict>
+		<!-- InDesign Library (.indl) -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Adobe InDesign Library</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>ID_Library_CC_Icon</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.indesign-library</string>
+			</array>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>indl</string>
+			</array>
+		</dict>
+		<!-- InDesign Markup Language (.idml) -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>Adobe InDesign Markup Language</string>
+			<key>CFBundleTypeIconFile</key>
+			<string>ID_IDMLFile_Icon</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adobe.indesign.idml</string>
+			</array>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>idml</string>
+			</array>
+		</dict>
+		<!-- すべてのファイル（フォルダ以外） -->
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>All Files</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Alternate</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.item</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
