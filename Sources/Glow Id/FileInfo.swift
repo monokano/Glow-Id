@@ -20,13 +20,9 @@ enum FileInfo {
 
         let ext = url.pathExtension.lowercased()
 
-        // IDML 判定：ZIP かつ mimetype エントリが IDML のもの（拡張子に依存しない）
-        if isIDMLPackage(url: url) {
-            parseIDML(url: url, fc: fc)
-            return fc
-        }
-
-        // バイナリ系 InDesign ファイル
+        // ヘッダーを先に読み、magic 一致ならバイナリ解析へ進む。
+        // magic 不一致のときのみ IDML(ZIP) を拡張子非依存で確認することで、
+        // 通常の indd/indt で不要な ZIP オープン（末尾走査）を避ける。
         guard let fh = try? FileHandle(forReadingFrom: url) else {
             fc.isVersionUndetected = true
             return fc
@@ -39,9 +35,13 @@ enum FileInfo {
             return fc
         }
 
-        // マジック検証
+        // マジック検証：不一致なら IDML(ZIP) かどうかをコンテンツで確認（拡張子に依存しない）
         guard Array(header[0..<16]) == magic else {
-            fc.isNotInDesign = true
+            if isIDMLPackage(url: url) {
+                parseIDML(url: url, fc: fc)
+            } else {
+                fc.isNotInDesign = true
+            }
             return fc
         }
 
