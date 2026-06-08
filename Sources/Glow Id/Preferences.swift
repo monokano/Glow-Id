@@ -24,6 +24,10 @@ class Preferences {
     /// true  = フルバージョン（x.x.x.x）
     var useFullVersion: Bool = false
 
+    /// フルバージョン表示時にビルド番号（4桁目）を表示しない（x.x.x.x → x.x.x）
+    /// useFullVersion が true のときのみ意味を持つ
+    var hideBuildNumber: Bool = true
+
     /// 上位バージョンで開くのを許可する
     var allowOpeningInHigherVersion: Bool = false
 
@@ -40,6 +44,7 @@ class Preferences {
         case autoClaimFileAssociations
         case doNotNotifyIconImport
         case useFullVersion
+        case hideBuildNumber
         case allowOpeningInHigherVersion
         case nonReleaseVersion
         case appIconVersion
@@ -53,6 +58,7 @@ class Preferences {
         autoClaimFileAssociations    = d.object(forKey: Key.autoClaimFileAssociations.rawValue)    as? Bool ?? true
         doNotNotifyIconImport        = d.object(forKey: Key.doNotNotifyIconImport.rawValue)        as? Bool ?? false
         useFullVersion               = d.object(forKey: Key.useFullVersion.rawValue)               as? Bool ?? false
+        hideBuildNumber              = d.object(forKey: Key.hideBuildNumber.rawValue)              as? Bool ?? true
         allowOpeningInHigherVersion  = d.object(forKey: Key.allowOpeningInHigherVersion.rawValue)  as? Bool ?? false
         nonReleaseVersion            = d.object(forKey: Key.nonReleaseVersion.rawValue)            as? Int  ?? 0
         appIconVersion               = d.string(forKey:  Key.appIconVersion.rawValue)              ?? ""
@@ -64,6 +70,7 @@ class Preferences {
         d.set(autoClaimFileAssociations,    forKey: Key.autoClaimFileAssociations.rawValue)
         d.set(doNotNotifyIconImport,        forKey: Key.doNotNotifyIconImport.rawValue)
         d.set(useFullVersion,               forKey: Key.useFullVersion.rawValue)
+        d.set(hideBuildNumber,              forKey: Key.hideBuildNumber.rawValue)
         d.set(allowOpeningInHigherVersion,  forKey: Key.allowOpeningInHigherVersion.rawValue)
         d.set(nonReleaseVersion,            forKey: Key.nonReleaseVersion.rawValue)
         d.set(appIconVersion,               forKey: Key.appIconVersion.rawValue)

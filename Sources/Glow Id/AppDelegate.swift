@@ -230,7 +230,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let prefs = Preferences.shared
 
         for url in dropItems {
-            let fc = FileInfo.parse(url: url, useFullVersion: prefs.useFullVersion)
+            let fc = FileInfo.parse(url: url, useFullVersion: prefs.useFullVersion, hideBuildNumber: prefs.hideBuildNumber)
 
             let needsWindow = evaluateInfoWindowMode(fc: fc, cmdKeyDown: cmdKeyDownAtDrop)
             if needsWindow {

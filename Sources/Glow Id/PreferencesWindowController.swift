@@ -11,6 +11,7 @@ class PreferencesWindowController: NSWindowController {
     private let versionLabel       = NSTextField(labelWithString: "")
     private let radioMajorMinor    = NSButton(radioButtonWithTitle: "", target: nil, action: nil)
     private let radioFullVersion   = NSButton(radioButtonWithTitle: "", target: nil, action: nil)
+    private let checkHideBuild     = NSButton(checkboxWithTitle: "", target: nil, action: nil)
 
     // MARK: - Init
 
@@ -82,6 +83,13 @@ class PreferencesWindowController: NSWindowController {
         radioFullVersion.translatesAutoresizingMaskIntoConstraints = false
         content.addSubview(radioFullVersion)
 
+        // フルバージョンの子設定: ビルド番号を表示しない
+        checkHideBuild.title = String(localized: "Do not show build number")
+        checkHideBuild.target = self
+        checkHideBuild.action = #selector(checkHideBuildChanged)
+        checkHideBuild.translatesAutoresizingMaskIntoConstraints = false
+        content.addSubview(checkHideBuild)
+
         setupConstraints(content: content)
     }
 
@@ -121,8 +129,12 @@ class PreferencesWindowController: NSWindowController {
             radioFullVersion.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 36),
             radioFullVersion.topAnchor.constraint(equalTo: radioMajorMinor.bottomAnchor, constant: 8),
 
+            // 子設定: ビルド番号を表示しない（フルバージョンの下にインデント）
+            checkHideBuild.leadingAnchor.constraint(equalTo: content.leadingAnchor, constant: 56),
+            checkHideBuild.topAnchor.constraint(equalTo: radioFullVersion.bottomAnchor, constant: 8),
+
             // ウィンドウ下端
-            content.bottomAnchor.constraint(equalTo: radioFullVersion.bottomAnchor, constant: 26),
+            content.bottomAnchor.constraint(equalTo: checkHideBuild.bottomAnchor, constant: 26),
         ])
     }
 
@@ -135,6 +147,8 @@ class PreferencesWindowController: NSWindowController {
         checkSuppressIcon.state = prefs.doNotNotifyIconImport ? .on : .off
         radioMajorMinor.state   = prefs.useFullVersion ? .off : .on
         radioFullVersion.state  = prefs.useFullVersion ? .on : .off
+        checkHideBuild.state    = prefs.hideBuildNumber ? .on : .off
+        checkHideBuild.isEnabled = prefs.useFullVersion
     }
 
     // MARK: - Actions
@@ -165,5 +179,12 @@ class PreferencesWindowController: NSWindowController {
         Preferences.shared.save()
         radioMajorMinor.state = Preferences.shared.useFullVersion ? .off : .on
         radioFullVersion.state = Preferences.shared.useFullVersion ? .on : .off
+        // フルバージョン選択時のみ子設定を活性化
+        checkHideBuild.isEnabled = Preferences.shared.useFullVersion
+    }
+
+    @objc private func checkHideBuildChanged() {
+        Preferences.shared.hideBuildNumber = (checkHideBuild.state == .on)
+        Preferences.shared.save()
     }
 }

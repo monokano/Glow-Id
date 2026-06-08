@@ -13,8 +13,10 @@ enum FileInfo {
     // MARK: - Public Entry
 
     /// ファイルを解析して FileClass を返す。
-    /// - Parameter useFullVersion: true = xref でフルバージョン取得（設定「フルバージョン」時）
-    static func parse(url: URL, useFullVersion: Bool) -> FileClass {
+    /// - Parameters:
+    ///   - useFullVersion: true = xref でフルバージョン取得（設定「フルバージョン」時）
+    ///   - hideBuildNumber: true = フルバージョン表示時にビルド番号（4桁目）を除く（x.x.x.x → x.x.x）
+    static func parse(url: URL, useFullVersion: Bool, hideBuildNumber: Bool = true) -> FileClass {
         let fc = FileClass()
         fc.file = url
 
@@ -118,8 +120,12 @@ enum FileInfo {
                 fc.versionMinor = minor
 
                 if useFullVersion {
-                    fc.versionDisplay = xrefVer
-                    fc.versionLabel = "InDesign \(appName(major, minor)) (\(xrefVer))"
+                    // ビルド番号（4桁目）を除く設定なら x.x.x.x → x.x.x に切り詰める
+                    let fullDisplay = hideBuildNumber
+                        ? xrefVer.split(separator: ".").prefix(3).joined(separator: ".")
+                        : xrefVer
+                    fc.versionDisplay = fullDisplay
+                    fc.versionLabel = "InDesign \(appName(major, minor)) (\(fullDisplay))"
                 } else {
                     let display = "\(major).\(minor)"
                     fc.versionDisplay = display

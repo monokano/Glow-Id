@@ -87,6 +87,16 @@
         }
       }
     },
+    "Do not show build number" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ビルド番号を表示しない"
+          }
+        }
+      }
+    },
     "Extension does not match" : {
       "localizations" : {
         "ja" : {
