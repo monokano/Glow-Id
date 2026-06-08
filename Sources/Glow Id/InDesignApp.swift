@@ -207,8 +207,11 @@ class InDesignApp {
 
     // MARK: - getIconFiles（5種アイコンをコピー）
 
-    func getIconFiles(onSuccess: ((String) -> Void)? = nil, onFailure: ((String) -> Void)? = nil) {
-        guard let latest = getMaximumVerAppClass() else { return }
+    /// onComplete は成功・失敗・中止のいずれの経路でも必ず最後に呼ばれる（後続処理の同期用）。
+    func getIconFiles(onSuccess: ((String) -> Void)? = nil,
+                      onFailure: ((String) -> Void)? = nil,
+                      onComplete: (() -> Void)? = nil) {
+        guard let latest = getMaximumVerAppClass() else { onComplete?(); return }
         let resources = latest.appURL.appendingPathComponent("Contents/Resources")
         let fm = FileManager.default
 
@@ -220,12 +223,12 @@ class InDesignApp {
             ("ID_IDMLFile_Icon.icns",     "ID_IDMLFile_Icon.icns"),
         ]
 
-        guard let myResources = Bundle.main.resourceURL else { return }
+        guard let myResources = Bundle.main.resourceURL else { onComplete?(); return }
 
         var pairs: [(src: URL, dest: URL)] = []
         for map in iconMap {
             let src = resources.appendingPathComponent(map.srcName)
-            guard fm.fileExists(atPath: src.path) else { return }  // 1つでも欠ければ中止
+            guard fm.fileExists(atPath: src.path) else { onComplete?(); return }  // 1つでも欠ければ中止
             pairs.append((src, myResources.appendingPathComponent(map.destName)))
         }
 
@@ -237,6 +240,7 @@ class InDesignApp {
             Preferences.shared.appIconVersion = latest.version
             Preferences.shared.save()
             onSuccess?(latest.version)
+            onComplete?()
         } catch {
             copyIconFilesWithAdminPrivileges(pairs: pairs) { success in
                 if success {
@@ -246,6 +250,7 @@ class InDesignApp {
                 } else {
                     onFailure?(latest.version)
                 }
+                onComplete?()
             }
         }
     }

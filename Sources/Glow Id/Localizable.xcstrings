@@ -77,6 +77,16 @@
         }
       }
     },
+    "Do not notify about file icon import" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルアイコン取り込みを通知しない"
+          }
+        }
+      }
+    },
     "Extension does not match" : {
       "localizations" : {
         "ja" : {
@@ -106,6 +116,9 @@
           }
         }
       }
+    },
+    "GitHub Releases" : {
+
     },
     "Glow Id - Notification" : {
       "localizations" : {

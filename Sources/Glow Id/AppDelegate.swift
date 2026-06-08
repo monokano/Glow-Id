@@ -12,6 +12,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var dropItems: [URL] = []
     private var countDrop: Int = 0
     private var cmdKeyDownAtDrop: Bool = false
+    /// アイコン取込（および完了ダイアログ）が終わったか
+    private var iconImportDone: Bool = false
+    /// アイコン取込完了を待って runStart() を実行するための保留フラグ
+    private var pendingRunStart: Bool = false
     var infoWindowController: InfoWindowController?
     private var preferencesWindowController: PreferencesWindowController?
     private var changeLogWindowController: ChangeLogWindowController?
@@ -55,26 +59,49 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 .forEach { NSApp.mainMenu?.removeItem($0) }
         }
 
-        // アイコンファイルのコピー（最新 InDesign.app から）
-        if !InDesignApp.shared.appClassALL.isEmpty {
-            let bundleBuild = Int(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "0") ?? 0
-            if prefs.nonReleaseVersion != bundleBuild {
-                InDesignApp.shared.getIconFiles { version in
-                    self.showIconImportedAlert(version: version)
-                } onFailure: { version in
-                    self.showIconImportFailedAlert(version: version)
-                }
-                prefs.nonReleaseVersion = bundleBuild
-                prefs.save()
-            } else if let latest = InDesignApp.shared.getMaximumVerAppClass(),
-                      latest.version != prefs.appIconVersion {
-                InDesignApp.shared.getIconFiles { version in
-                    self.showIconImportedAlert(version: version)
-                } onFailure: { version in
-                    self.showIconImportFailedAlert(version: version)
-                }
+        // アイコンファイルのコピー（最新 InDesign.app から）。
+        // 完了ダイアログを真っ先に表示するため、取込完了まで runStart() を保留する。
+        importIconsIfNeeded { [weak self] in
+            guard let self else { return }
+            self.iconImportDone = true
+            if self.pendingRunStart {
+                self.pendingRunStart = false
+                self.runStart()
             }
         }
+    }
+
+    // MARK: - アイコン取込
+
+    /// アイコン取込が必要なら実行し、完了ダイアログ（抑制設定でない場合）を表示してから
+    /// completion を呼ぶ。取込不要・中止の場合も必ず completion を呼ぶ。
+    private func importIconsIfNeeded(completion: @escaping () -> Void) {
+        let prefs = Preferences.shared
+        guard !InDesignApp.shared.appClassALL.isEmpty else { completion(); return }
+
+        let bundleBuild = Int(Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "0") ?? 0
+
+        let needImport: Bool
+        if prefs.nonReleaseVersion != bundleBuild {
+            prefs.nonReleaseVersion = bundleBuild
+            prefs.save()
+            needImport = true
+        } else if let latest = InDesignApp.shared.getMaximumVerAppClass(),
+                  latest.version != prefs.appIconVersion {
+            needImport = true
+        } else {
+            needImport = false
+        }
+
+        guard needImport else { completion(); return }
+
+        InDesignApp.shared.getIconFiles(onSuccess: { [weak self] version in
+            self?.showIconImportedAlert(version: version)
+        }, onFailure: { [weak self] version in
+            self?.showIconImportFailedAlert(version: version)
+        }, onComplete: {
+            completion()
+        })
     }
 
     // MARK: - ファイル関連付け再登録
@@ -176,7 +203,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard !dropItems.isEmpty else { appQuit(); return }
 
         if countDrop == 1 {
-            runStart()
+            // アイコン取込の完了ダイアログを先に出すため、未完了なら保留する。
+            if iconImportDone {
+                runStart()
+            } else {
+                pendingRunStart = true
+            }
         }
     }
 
@@ -259,6 +291,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Helpers
 
     private func showIconImportedAlert(version: String) {
+        guard !Preferences.shared.doNotNotifyIconImport else { return }
         let name = FileInfo.appName(Int(version.components(separatedBy: ".").first ?? "") ?? 0, 0)
         let alert = NSAlert()
         alert.messageText = String(format: String(localized: "Icon files imported from InDesign %@"), name)
@@ -269,6 +302,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func showIconImportFailedAlert(version: String) {
+        guard !Preferences.shared.doNotNotifyIconImport else { return }
         let name = FileInfo.appName(Int(version.components(separatedBy: ".").first ?? "") ?? 0, 0)
         let alert = NSAlert()
         alert.messageText = String(format: String(localized: "Failed to import icon files from InDesign %@"), name)

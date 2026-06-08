@@ -16,6 +16,9 @@ class Preferences {
     /// 起動時にファイル関連付けを自動登録する（5種）
     var autoClaimFileAssociations: Bool = true
 
+    /// ファイルアイコン取込完了を通知しない（完了・失敗ダイアログを抑制）
+    var doNotNotifyIconImport: Bool = false
+
     /// indd/indt のバージョン検出モード
     /// false = メジャー.マイナー（デフォルト）
     /// true  = フルバージョン（x.x.x.x）
@@ -35,6 +38,7 @@ class Preferences {
     private enum Key: String {
         case alwaysShowNotificationWindow
         case autoClaimFileAssociations
+        case doNotNotifyIconImport
         case useFullVersion
         case allowOpeningInHigherVersion
         case nonReleaseVersion
@@ -47,6 +51,7 @@ class Preferences {
         let d = defaults
         alwaysShowNotificationWindow = d.object(forKey: Key.alwaysShowNotificationWindow.rawValue) as? Bool ?? false
         autoClaimFileAssociations    = d.object(forKey: Key.autoClaimFileAssociations.rawValue)    as? Bool ?? true
+        doNotNotifyIconImport        = d.object(forKey: Key.doNotNotifyIconImport.rawValue)        as? Bool ?? false
         useFullVersion               = d.object(forKey: Key.useFullVersion.rawValue)               as? Bool ?? false
         allowOpeningInHigherVersion  = d.object(forKey: Key.allowOpeningInHigherVersion.rawValue)  as? Bool ?? false
         nonReleaseVersion            = d.object(forKey: Key.nonReleaseVersion.rawValue)            as? Int  ?? 0
@@ -57,6 +62,7 @@ class Preferences {
         let d = defaults
         d.set(alwaysShowNotificationWindow, forKey: Key.alwaysShowNotificationWindow.rawValue)
         d.set(autoClaimFileAssociations,    forKey: Key.autoClaimFileAssociations.rawValue)
+        d.set(doNotNotifyIconImport,        forKey: Key.doNotNotifyIconImport.rawValue)
         d.set(useFullVersion,               forKey: Key.useFullVersion.rawValue)
         d.set(allowOpeningInHigherVersion,  forKey: Key.allowOpeningInHigherVersion.rawValue)
         d.set(nonReleaseVersion,            forKey: Key.nonReleaseVersion.rawValue)

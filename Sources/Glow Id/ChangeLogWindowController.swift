@@ -24,7 +24,7 @@ class ChangeLogWindowController: NSObject {
             defer: false
         )
         win.title = String(localized: "Change Log")
-        win.contentView = NSHostingView(rootView: ChangeLogView())
+        win.contentView = NSHostingView(rootView: ChangeLogRootView())
         win.minSize = NSSize(width: 300, height: 200)
         win.isReleasedWhenClosed = false
 
@@ -45,9 +45,34 @@ class ChangeLogWindowController: NSObject {
     }
 }
 
+// MARK: - ChangeLogRootView
+
+/// 上部に外部リンク（GitHub Releases）、その下に更新履歴の WebView を配置する。
+/// 外部リンクをリモートHTML側ではなくアプリのネイティブUIに置くことで、
+/// 旧バージョンでの不適切な挙動（ウィンドウ内遷移など）を避ける。
+private struct ChangeLogRootView: View {
+
+    private let releasesURL = URL(string: "https://github.com/monokano/Glow-Id/releases")!
+
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Link("GitHub Releases", destination: releasesURL)
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+
+            ChangeLogView()
+        }
+    }
+}
+
 // MARK: - ChangeLogView
 
 private struct ChangeLogView: NSViewRepresentable {
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
 
     func makeNSView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
@@ -61,6 +86,7 @@ private struct ChangeLogView: NSViewRepresentable {
         config.userContentController.addUserScript(script)
 
         let webView = WKWebView(frame: .zero, configuration: config)
+        webView.navigationDelegate = context.coordinator
 
         // 日本語ローカライズ時は ja、それ以外は en
         let lang = Locale.current.language.languageCode?.identifier == "ja" ? "ja" : "en"
@@ -73,4 +99,21 @@ private struct ChangeLogView: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: WKWebView, context: Context) {}
+
+    // MARK: - Coordinator
+
+    /// HTML内のリンクをクリックしたら WebView 内で遷移させず、デフォルトブラウザで開く。
+    final class Coordinator: NSObject, WKNavigationDelegate {
+        func webView(_ webView: WKWebView,
+                     decidePolicyFor navigationAction: WKNavigationAction,
+                     decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+            if navigationAction.navigationType == .linkActivated,
+               let url = navigationAction.request.url {
+                NSWorkspace.shared.open(url)
+                decisionHandler(.cancel)
+                return
+            }
+            decisionHandler(.allow)
+        }
+    }
 }
