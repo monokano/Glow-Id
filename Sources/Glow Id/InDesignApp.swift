@@ -1,6 +1,18 @@
 import AppKit
 import Foundation
 
+// MARK: - IconImportProblem（アイコン取込が失敗した原因）
+
+/// 自分のバンドルにアイコンを書き込めなかった理由。AppDelegate 側で原因別の案内に使う。
+enum IconImportProblem {
+    /// App Translocation（隔離属性付きで読み取り専用のランダムパスから起動）
+    case translocated
+    /// バンドル内ファイルが管理者（root）所有になっている
+    case rootOwned
+    /// その他、設置場所に書き込めない
+    case notWritable
+}
+
 // MARK: - InDesignAppClass（InDesignアプリ1本分のデータモデル）
 
 class InDesignAppClass {
@@ -208,8 +220,9 @@ class InDesignApp {
     // MARK: - getIconFiles（5種アイコンをコピー）
 
     /// onComplete は成功・失敗・中止のいずれの経路でも必ず最後に呼ばれる（後続処理の同期用）。
+    /// onProblem は書き込めなかったときに原因種別を返す（管理者パスワードは要求しない）。
     func getIconFiles(onSuccess: ((String) -> Void)? = nil,
-                      onFailure: ((String) -> Void)? = nil,
+                      onProblem: ((IconImportProblem) -> Void)? = nil,
                       onComplete: (() -> Void)? = nil) {
         guard let latest = getMaximumVerAppClass() else { onComplete?(); return }
         let resources = latest.appURL.appendingPathComponent("Contents/Resources")
@@ -242,36 +255,40 @@ class InDesignApp {
             onSuccess?(latest.version)
             onComplete?()
         } catch {
-            copyIconFilesWithAdminPrivileges(pairs: pairs) { success in
-                if success {
-                    Preferences.shared.appIconVersion = latest.version
-                    Preferences.shared.save()
-                    onSuccess?(latest.version)
-                } else {
-                    onFailure?(latest.version)
-                }
-                onComplete?()
+            // 書き込み不可 → 管理者パスワードは要求せず、原因を診断して案内する
+            let problem: IconImportProblem
+            if isTranslocated(Bundle.main.bundleURL) {
+                problem = .translocated
+            } else if ownerUID(pairs.first?.dest.path ?? "") == 0 || ownerUID(myResources.path) == 0 {
+                problem = .rootOwned
+            } else {
+                problem = .notWritable
             }
+            onProblem?(problem)
+            onComplete?()
         }
     }
 
-    private func copyIconFilesWithAdminPrivileges(
-        pairs: [(src: URL, dest: URL)],
-        completion: @escaping (Bool) -> Void
-    ) {
-        let cpCommands = pairs.map { pair in
-            "cp -f \(shellEscape(pair.src.path)) \(shellEscape(pair.dest.path))"
-        }.joined(separator: " ; ")
+    // MARK: - 設置状態の診断
 
-        let source = """
-        do shell script "\(cpCommands)" with administrator privileges
-        """
-        DispatchQueue.main.async {
-            var error: NSDictionary?
-            let script = NSAppleScript(source: source)
-            script?.executeAndReturnError(&error)
-            completion(error == nil)
+    /// App Translocation（隔離属性付きで読み取り専用のランダムパス）から起動しているか。
+    /// 正規 API `SecTranslocateIsTranslocatedURL` を dlsym で呼び、取得できなければパスで判定する。
+    private func isTranslocated(_ url: URL) -> Bool {
+        typealias Fn = @convention(c) (CFURL, UnsafeMutablePointer<Bool>, UnsafeMutablePointer<Unmanaged<CFError>?>?) -> DarwinBoolean
+        if let handle = dlopen("/System/Library/Frameworks/Security.framework/Security", RTLD_LAZY),
+           let sym = dlsym(handle, "SecTranslocateIsTranslocatedURL") {
+            let fn = unsafeBitCast(sym, to: Fn.self)
+            var isTrans = false
+            var err: Unmanaged<CFError>? = nil
+            if fn(url as CFURL, &isTrans, &err).boolValue { return isTrans }
         }
+        return url.path.contains("/AppTranslocation/")
+    }
+
+    /// 指定パスの所有者 UID（root = 0／取得不可なら nil）
+    private func ownerUID(_ path: String) -> uid_t? {
+        var st = stat()
+        return stat(path, &st) == 0 ? st.st_uid : nil
     }
 
     // MARK: - Private helpers
@@ -290,10 +307,6 @@ class InDesignApp {
             result += (Double(p) ?? 0) * weights[i]
         }
         return result
-    }
-
-    private func shellEscape(_ path: String) -> String {
-        "'" + path.replacingOccurrences(of: "'", with: "'\\''") + "'"
     }
 }
 

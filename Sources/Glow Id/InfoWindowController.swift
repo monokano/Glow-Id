@@ -144,7 +144,9 @@ final class InfoViewModel: ObservableObject {
             tableRows.append(AppListRow(
                 appClass: ac,
                 name: folder,
-                version: ac.version,
+                // 表示用はビルド番号（第4要素）を除いた x.x.x にする（Ai と表記を合わせる）。
+                // 内部の最大版選択・ソートは ac.versionDouble を使うため影響しない。
+                version: ac.version.components(separatedBy: ".").prefix(3).joined(separator: "."),
                 icon: ac.icon,
                 isBooted: ac.isBooted,
                 canOpen: canOpen,

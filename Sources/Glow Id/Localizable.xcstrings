@@ -108,6 +108,7 @@
       }
     },
     "Failed to import icon files from InDesign %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
@@ -140,6 +141,26 @@
         }
       }
     },
+    "Glow Id cannot write to its current location. Move it to the Applications folder (or the Applications folder in your home folder) and open it again." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id は現在の場所に書き込めません。「アプリケーション」フォルダ（または、ホームフォルダ内の「アプリケーション」フォルダ）へ移動してから、もう一度開いてください。"
+          }
+        }
+      }
+    },
+    "Glow Id could not update its file icons" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id はファイルアイコンを更新できませんでした"
+          }
+        }
+      }
+    },
     "Glow Id Help" : {
       "comment" : "Help window title",
       "extractionState" : "manual",
@@ -148,6 +169,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Glow Id ヘルプ"
+          }
+        }
+      }
+    },
+    "Glow Id is running from a temporary, read-only location, so it cannot update its file icons. Quit Glow Id, move it to the Applications folder using the Finder, and open it again." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id が一時的な読み取り専用の場所から起動しているため、ファイルアイコンを更新できません。Glow Id を終了し、Finder で「アプリケーション」フォルダへ移動してから、もう一度開いてください。"
           }
         }
       }
@@ -300,6 +331,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開く…"
+          }
+        }
+      }
+    },
+    "Part of Glow Id is owned by the administrator, so it cannot update its file icons. Move Glow Id to the Trash, download the latest version, and install it again." : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id の一部が管理者（root）の所有になっているため、ファイルアイコンを更新できません。Glow Id をゴミ箱に入れ、最新版をダウンロードして入れ直してください。"
+          }
+        }
+      }
+    },
+    "Please move Glow Id to the Applications folder" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id を「アプリケーション」フォルダへ移動してください"
+          }
+        }
+      }
+    },
+    "Please reinstall Glow Id" : {
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Id を入れ直してください"
           }
         }
       }

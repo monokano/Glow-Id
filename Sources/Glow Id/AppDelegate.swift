@@ -97,8 +97,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         InDesignApp.shared.getIconFiles(onSuccess: { [weak self] version in
             self?.showIconImportedAlert(version: version)
-        }, onFailure: { [weak self] version in
-            self?.showIconImportFailedAlert(version: version)
+        }, onProblem: { [weak self] problem in
+            self?.showIconImportProblemAlert(problem)
         }, onComplete: {
             completion()
         })
@@ -301,12 +301,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         alert.runModal()
     }
 
-    private func showIconImportFailedAlert(version: String) {
-        guard !Preferences.shared.doNotNotifyIconImport else { return }
-        let name = FileInfo.appName(Int(version.components(separatedBy: ".").first ?? "") ?? 0, 0)
+    /// アイコンを自分のバンドルに書き込めなかったとき、原因に応じた是正案内を表示する。
+    /// 管理者パスワードは要求しない（旧来の管理者コピーを廃止した代替）。
+    private func showIconImportProblemAlert(_ problem: IconImportProblem) {
         let alert = NSAlert()
-        alert.messageText = String(format: String(localized: "Failed to import icon files from InDesign %@"), name)
         alert.alertStyle = .warning
+        switch problem {
+        case .translocated:
+            alert.messageText = String(localized: "Please move Glow Id to the Applications folder")
+            alert.informativeText = String(localized: "Glow Id is running from a temporary, read-only location, so it cannot update its file icons. Quit Glow Id, move it to the Applications folder using the Finder, and open it again.")
+        case .rootOwned:
+            alert.messageText = String(localized: "Please reinstall Glow Id")
+            alert.informativeText = String(localized: "Part of Glow Id is owned by the administrator, so it cannot update its file icons. Move Glow Id to the Trash, download the latest version, and install it again.")
+        case .notWritable:
+            alert.messageText = String(localized: "Glow Id could not update its file icons")
+            alert.informativeText = String(localized: "Glow Id cannot write to its current location. Move it to the Applications folder (or the Applications folder in your home folder) and open it again.")
+        }
         alert.addButton(withTitle: "OK")
         NSApp.activate(ignoringOtherApps: true)
         alert.runModal()
