@@ -151,45 +151,56 @@ enum FileInfo {
         let blockCount = data.count / blockSize
         guard blockCount > 2 else { return nil }
 
-        var candidates: [Int] = []
-        for i in 0..<blockCount {
-            let trailerStart = data.startIndex + i * blockSize + 0xff0
-            let bid = data.readU32LE(at: trailerStart + 4)
-            if bid == 8 || bid == 9 { candidates.append(i) }
-        }
-        guard !candidates.isEmpty else { return nil }
-
         // ヘッダー minor の更新バグは major 8〜13（CS6〜CC2018）のみ。
         // それ以外（CS5.5 以前 / CC2019 以降）はヘッダー minor が信頼できるので minor まで絞り込む。
         let prefix = (major <= 7 || major >= 14) ? "\(major).\(minor)." : "\(major)."
-        let prefixData = Data(prefix.utf8)
+        let pre = [UInt8](prefix.utf8)
 
         var sentinelHits: [(globalOffset: Int, version: String, ts6: UInt64)] = []
         var lastHits:     [(globalOffset: Int, version: String, ts6: UInt64)] = []
 
-        for i in candidates {
-            let chunkStart = data.startIndex + i * blockSize
-            let chunkEnd   = chunkStart + blockSize
-            guard chunkEnd <= data.endIndex else { continue }
-            let chunk = data[chunkStart..<chunkEnd]
+        // バイト走査は Data 越しの subscript / range(of:) を避け、生ポインタ＋memchr で行う。
+        // trailer (+0xff4) の bid=8/9 抽出・プレフィックス絞り込み・sentinel 判定・TS6 読み出し・
+        // ブロック境界(4096)の扱いは、いずれも従来の Data 版とバイト単位で完全に同一。
+        data.withUnsafeBytes { (raw: UnsafeRawBufferPointer) in
+            guard let rawBase = raw.baseAddress else { return }
+            let p = rawBase.assumingMemoryBound(to: UInt8.self)
+            let n = raw.count
 
-            var searchRange = chunk.startIndex..<chunk.endIndex
-            while let range = chunk.range(of: Data([0x2E]), in: searchRange) {
-                let pos = range.lowerBound
-                if let verRange = versionRange(in: chunk, dotAt: pos),
-                   chunk[verRange].starts(with: prefixData) {
-                    let ver = String(chunk[verRange].map { Character(UnicodeScalar($0)) })
-                    let globalOffset = verRange.lowerBound - data.startIndex
-                    let afterEnd = min(verRange.upperBound + 24, chunk.endIndex)
-                    let after = chunk[verRange.upperBound..<afterEnd]
-                    let ts6 = readTS6(chunk: chunk, from: verRange.upperBound)
-                    if hasSentinelFixed(after) {
+            // 各ブロックの trailer (+0xff4) を読み、bid==8 / bid==9 の候補を収集。
+            var candidates: [Int] = []
+            candidates.reserveCapacity(blockCount / 4 + 1)
+            for i in 0..<blockCount {
+                let t = i * blockSize + 0xff4
+                if t + 4 <= n {
+                    let bid = u32le(p, t)
+                    if bid == 8 || bid == 9 { candidates.append(i) }
+                }
+            }
+
+            for i in candidates {
+                let chunkStart = i * blockSize
+                let chunkEnd   = chunkStart + blockSize
+                if chunkEnd > n { continue }
+
+                var searchFrom = chunkStart
+                while searchFrom < chunkEnd,
+                      let found = memchr(rawBase + searchFrom, 0x2E, chunkEnd - searchFrom) {
+                    let dotIndex = UnsafeRawPointer(found) - rawBase
+                    guard let (vs, ve) = versionRangeFast(p, dotAt: dotIndex, lo: chunkStart, hi: chunkEnd),
+                          startsWith(p, vs, ve, pre) else {
+                        searchFrom = dotIndex + 1
+                        continue
+                    }
+                    let afterEnd = min(ve + 24, chunkEnd)
+                    let ts6 = readTS6Fast(p, from: ve, hi: chunkEnd)
+                    let ver = String(decoding: UnsafeBufferPointer(start: p + vs, count: ve - vs), as: UTF8.self)
+                    let globalOffset = vs
+                    if hasSentinelFast(p, lo: ve, hi: afterEnd) {
                         sentinelHits.append((globalOffset, ver, ts6))
                     }
                     lastHits.append((globalOffset, ver, ts6))
-                    searchRange = verRange.upperBound..<chunk.endIndex
-                } else {
-                    searchRange = (pos + 1)..<chunk.endIndex
+                    searchFrom = ve
                 }
             }
         }
@@ -307,61 +318,86 @@ enum FileInfo {
         }
     }
 
-    private static func versionRange(in data: Data, dotAt: Data.Index) -> Range<Data.Index>? {
-        guard dotAt > data.startIndex else { return nil }
+    // MARK: - xref バイト走査ヘルパー（生ポインタ版）
+    //
+    // バージョンレコードの形式:
+    //   旧フォーマット（CS）:     [len] 0x40 [len] [version] [TS6]
+    //   新フォーマット（CC以降）: [len] 0x40 [version] [TS6]
+    // 長さプレフィックスを尊重して version を切り出す（貪欲マッチだと
+    // 例: "12.1.0.56" が直後の TS6 先頭バイト '8'(=0x38) を食って "12.1.0.568" になる）。
+    // いずれも [lo,hi) のブロック境界内だけを参照し、従来の Data 版とバイト単位で同一の結果を返す。
+
+    @inline(__always) private static func u32le(_ p: UnsafePointer<UInt8>, _ i: Int) -> UInt32 {
+        UInt32(p[i]) | (UInt32(p[i + 1]) << 8) | (UInt32(p[i + 2]) << 16) | (UInt32(p[i + 3]) << 24)
+    }
+
+    @inline(__always) private static func isDig(_ b: UInt8) -> Bool { b >= 0x30 && b <= 0x39 }
+
+    /// "." の位置から M.m.p.b を [lo,hi) 内で解析。返値は p への絶対 index 範囲 (start, end)。
+    @inline(__always)
+    private static func versionRangeFast(_ p: UnsafePointer<UInt8>, dotAt: Int, lo: Int, hi: Int) -> (Int, Int)? {
+        guard dotAt > lo else { return nil }
         var start = dotAt - 1
-        while start > data.startIndex && isDigit(data[start - 1]) { start -= 1 }
-        guard isDigit(data[start]) else { return nil }
+        while start > lo && isDig(p[start - 1]) { start -= 1 }
+        guard isDig(p[start]) else { return nil }
 
         var pos = dotAt + 1
         var dots = 1
-        while pos < data.endIndex {
-            if isDigit(data[pos]) { pos += 1 }
-            else if data[pos] == 0x2E && dots < 3 { dots += 1; pos += 1 }
+        while pos < hi {
+            let b = p[pos]
+            if isDig(b) { pos += 1 }
+            else if b == 0x2E && dots < 3 { dots += 1; pos += 1 }
             else { break }
         }
-        guard dots == 3, pos > dotAt + 1, isDigit(data[pos - 1]) else { return nil }
+        guard dots == 3, pos > dotAt + 1, isDig(p[pos - 1]) else { return nil }
 
-        let offsetFromStart = start - data.startIndex
+        let offsetFromStart = start - lo
         let greedyLen = pos - start
         if offsetFromStart >= 2 {
-            if data[start - 1] == 0x40 {
-                let declared = Int(data[start - 2])
-                if declared >= 5 && declared <= 15 && declared <= greedyLen {
-                    return start..<(start + declared)
-                }
-            } else if data[start - 2] == 0x40 {
-                let declared = Int(data[start - 1])
-                if declared >= 5 && declared <= 15 && declared <= greedyLen {
-                    return start..<(start + declared)
-                }
+            if p[start - 1] == 0x40 {
+                let d = Int(p[start - 2])
+                if d >= 5 && d <= 15 && d <= greedyLen { return (start, start + d) }
+            } else if p[start - 2] == 0x40 {
+                let d = Int(p[start - 1])
+                if d >= 5 && d <= 15 && d <= greedyLen { return (start, start + d) }
             }
         }
-        return start..<pos
+        return (start, pos)
     }
 
-    private static func isDigit(_ byte: UInt8) -> Bool { byte >= 0x30 && byte <= 0x39 }
-
-    private static func readTS6(chunk: Data, from start: Data.Index) -> UInt64 {
+    /// バージョン文字列直後の6バイトを LE u48 として読む（hi で打ち切り）。
+    @inline(__always)
+    private static func readTS6Fast(_ p: UnsafePointer<UInt8>, from start: Int, hi: Int) -> UInt64 {
         var v: UInt64 = 0
         for i in 0..<6 {
             let idx = start + i
-            if idx >= chunk.endIndex { break }
-            v |= UInt64(chunk[idx]) << (i * 8)
+            if idx >= hi { break }
+            v |= UInt64(p[idx]) << (i * 8)
         }
         return v
     }
 
-    private static func hasSentinelFixed(_ data: Data) -> Bool {
-        var i = data.startIndex
-        while i < data.endIndex {
-            if data[i] == 0x40 {
-                let tail = data[(i + 1)...].prefix(6)
-                if tail.count >= 6 && tail.allSatisfy({ $0 == 0x00 }) { return true }
+    /// センチネル: [lo,hi) で 0x40 を全走査し、直後に 6バイト以上 0x00 が続くものを検出。
+    @inline(__always)
+    private static func hasSentinelFast(_ p: UnsafePointer<UInt8>, lo: Int, hi: Int) -> Bool {
+        var i = lo
+        while i < hi {
+            if p[i] == 0x40 && i + 7 <= hi {
+                var ok = true
+                for k in 1...6 where p[i + k] != 0x00 { ok = false; break }
+                if ok { return true }
             }
-            i = data.index(after: i)
+            i += 1
         }
         return false
+    }
+
+    /// p[start..<end] が pre で始まるか（バイト比較）。
+    @inline(__always)
+    private static func startsWith(_ p: UnsafePointer<UInt8>, _ start: Int, _ end: Int, _ pre: [UInt8]) -> Bool {
+        if end - start < pre.count { return false }
+        for k in 0..<pre.count where p[start + k] != pre[k] { return false }
+        return true
     }
 
     private static func firstMatch(in text: String, pattern: String) -> String? {
@@ -370,15 +406,5 @@ enum FileInfo {
         guard let m = re.firstMatch(in: text, range: range), m.numberOfRanges >= 2,
               let r = Range(m.range(at: 1), in: text) else { return nil }
         return String(text[r])
-    }
-}
-
-private extension Data {
-    nonisolated func readU32LE(at index: Index) -> UInt32 {
-        guard index + 4 <= self.endIndex else { return 0 }
-        return UInt32(self[index]) |
-               (UInt32(self[index + 1]) << 8) |
-               (UInt32(self[index + 2]) << 16) |
-               (UInt32(self[index + 3]) << 24)
     }
 }
