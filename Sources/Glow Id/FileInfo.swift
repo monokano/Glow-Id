@@ -111,7 +111,7 @@ enum FileInfo {
         if needsXref {
             try? fh.seek(toOffset: 0)
             if let data = try? fh.readToEnd(),
-               let xrefVer = runXref(data: data, major: headerMajor, minor: headerMinor) {
+               let xrefVer = runXref(data: data, major: headerMajor, minor: headerMinor, bigEndian: !newFmt) {
                 let parts = xrefVer.split(separator: ".")
                 let major = Int(parts[0]) ?? headerMajor
                 let minor = parts.count >= 2 ? (Int(parts[1]) ?? headerMinor) : headerMinor
@@ -146,7 +146,7 @@ enum FileInfo {
 
     // MARK: - xref スキャン（返値: "M.m.p.b" 文字列、失敗時 nil）
 
-    private static func runXref(data: Data, major: Int, minor: Int) -> String? {
+    private static func runXref(data: Data, major: Int, minor: Int, bigEndian: Bool) -> String? {
         let blockSize = 0x1000
         let blockCount = data.count / blockSize
         guard blockCount > 2 else { return nil }
@@ -156,11 +156,11 @@ enum FileInfo {
         let prefix = (major <= 7 || major >= 14) ? "\(major).\(minor)." : "\(major)."
         let pre = [UInt8](prefix.utf8)
 
-        var sentinelHits: [(globalOffset: Int, version: String, ts6: UInt64)] = []
-        var lastHits:     [(globalOffset: Int, version: String, ts6: UInt64)] = []
+        var sentinelHits: [(globalOffset: Int, version: String, ts32: UInt32)] = []
+        var lastHits:     [(globalOffset: Int, version: String, ts32: UInt32)] = []
 
         // バイト走査は Data 越しの subscript / range(of:) を避け、生ポインタ＋memchr で行う。
-        // trailer (+0xff4) の bid=8/9 抽出・プレフィックス絞り込み・sentinel 判定・TS6 読み出し・
+        // trailer (+0xff4) の bid=8/9 抽出・プレフィックス絞り込み・sentinel 判定・ts32 読み出し・
         // ブロック境界(4096)の扱いは、いずれも従来の Data 版とバイト単位で完全に同一。
         data.withUnsafeBytes { (raw: UnsafeRawBufferPointer) in
             guard let rawBase = raw.baseAddress else { return }
@@ -193,35 +193,43 @@ enum FileInfo {
                         continue
                     }
                     let afterEnd = min(ve + 24, chunkEnd)
-                    let ts6 = readTS6Fast(p, from: ve, hi: chunkEnd)
+                    let ts32 = readTS32Fast(p, after: ve, hi: chunkEnd, bigEndian: bigEndian)
                     let ver = String(decoding: UnsafeBufferPointer(start: p + vs, count: ve - vs), as: UTF8.self)
                     let globalOffset = vs
                     if hasSentinelFast(p, lo: ve, hi: afterEnd) {
-                        sentinelHits.append((globalOffset, ver, ts6))
+                        sentinelHits.append((globalOffset, ver, ts32))
                     }
-                    lastHits.append((globalOffset, ver, ts6))
+                    lastHits.append((globalOffset, ver, ts32))
                     searchFrom = ve
                 }
             }
         }
 
-        // 採用アルゴリズム: ts32（バージョン文字列直後 +2..+5 を LE u32、FILETIME hi32 を
-        // 約 7 分粒度に切り詰めた保存時刻）を主キー、物理オフセットをタイブレーカーにして
-        // 降順最大を採用。詳細は xref採用アルゴリズム解析.md
+        // 採用アルゴリズム: ts32（バージョン文字列直後 +2..+5、FILETIME hi32 を約 7 分粒度に
+        // 切り詰めた保存時刻。バイト順はファイルのフォーマットに従う）を主キー、
+        // 物理オフセットをタイブレーカーにして降順最大を採用。詳細は xref採用アルゴリズム解析.md
         let cmp: (
-            (globalOffset: Int, version: String, ts6: UInt64),
-            (globalOffset: Int, version: String, ts6: UInt64)
+            (globalOffset: Int, version: String, ts32: UInt32),
+            (globalOffset: Int, version: String, ts32: UInt32)
         ) -> Bool = { a, b in
-            let aTS32 = (a.ts6 >> 16) & 0xFFFFFFFF
-            let bTS32 = (b.ts6 >> 16) & 0xFFFFFFFF
-            if aTS32 != bTS32 { return aTS32 < bTS32 }
+            if a.ts32 != b.ts32 { return a.ts32 < b.ts32 }
             return a.globalOffset < b.globalOffset
         }
 
-        if let chosen = sentinelHits.max(by: cmp) {
+        // ts32 が FILETIME hi32 として妥当な範囲のレコードを優先する。
+        // 範囲外はコンテンツ由来の偽レコード（bid が偶然 8/9 のブロック内のテキスト等）の疑いがあるため、
+        // 妥当なレコードが 1 件も無いときだけ採用対象にする。
+        func pick(
+            _ pool: [(globalOffset: Int, version: String, ts32: UInt32)]
+        ) -> (globalOffset: Int, version: String, ts32: UInt32)? {
+            let plausible = pool.filter { ts32PlausibleRange.contains($0.ts32) }
+            return (plausible.isEmpty ? pool : plausible).max(by: cmp)
+        }
+
+        if let chosen = pick(sentinelHits) {
             return chosen.version
         }
-        if let chosen = lastHits.max(by: cmp) {
+        if let chosen = pick(lastHits) {
             return chosen.version
         }
         return nil
@@ -321,11 +329,18 @@ enum FileInfo {
     // MARK: - xref バイト走査ヘルパー（生ポインタ版）
     //
     // バージョンレコードの形式:
-    //   旧フォーマット（CS）:     [len] 0x40 [len] [version] [TS6]
-    //   新フォーマット（CC以降）: [len] 0x40 [version] [TS6]
+    //   旧フォーマット（BE 系譜）: [0x40] [len] [version] [build u16 BE] [ts32 BE] ...
+    //   新フォーマット（LE 系譜）: [len] [0x40] [version] [build u16 LE] [ts32 LE] ...
+    // 新旧はバージョン年代ではなくエンディアン系譜（旧＝ビッグエンディアン）。
+    // CS/CS2 世代由来のファイルは現代の InDesign で保存し直しても旧フォーマット（BE）のまま
+    // 引き継がれるため、build/ts32 のバイト順はフォーマット判別に従って読む必要がある。
     // 長さプレフィックスを尊重して version を切り出す（貪欲マッチだと
-    // 例: "12.1.0.56" が直後の TS6 先頭バイト '8'(=0x38) を食って "12.1.0.568" になる）。
+    // 例: "12.1.0.56" が直後のメタデータ先頭バイト '8'(=0x38) を食って "12.1.0.568" になる）。
     // いずれも [lo,hi) のブロック境界内だけを参照し、従来の Data 版とバイト単位で同一の結果を返す。
+
+    /// ts32 の妥当域。FILETIME hi32（1601 年起算・1 単位 ≈ 7.16 分）として
+    /// 約 1972〜2172 年に相当する範囲。範囲外は偽レコードの疑いとして劣後させる。
+    private static let ts32PlausibleRange: ClosedRange<UInt32> = 0x01A0_0000...0x0280_0000
 
     @inline(__always) private static func u32le(_ p: UnsafePointer<UInt8>, _ i: Int) -> UInt32 {
         UInt32(p[i]) | (UInt32(p[i + 1]) << 8) | (UInt32(p[i + 2]) << 16) | (UInt32(p[i + 3]) << 24)
@@ -365,14 +380,16 @@ enum FileInfo {
         return (start, pos)
     }
 
-    /// バージョン文字列直後の6バイトを LE u48 として読む（hi で打ち切り）。
+    /// バージョン文字列直後 +2..+5 の 4 バイトを ts32 として読む（hi で打ち切り、不足分は 0）。
+    /// バイト順はファイルのフォーマットに従う（旧フォーマット＝ビッグエンディアン）。
     @inline(__always)
-    private static func readTS6Fast(_ p: UnsafePointer<UInt8>, from start: Int, hi: Int) -> UInt64 {
-        var v: UInt64 = 0
-        for i in 0..<6 {
-            let idx = start + i
+    private static func readTS32Fast(_ p: UnsafePointer<UInt8>, after end: Int, hi: Int, bigEndian: Bool) -> UInt32 {
+        var v: UInt32 = 0
+        for i in 0..<4 {
+            let idx = end + 2 + i
             if idx >= hi { break }
-            v |= UInt64(p[idx]) << (i * 8)
+            let shift = bigEndian ? (3 - i) * 8 : i * 8
+            v |= UInt32(p[idx]) << shift
         }
         return v
     }
