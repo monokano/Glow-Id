@@ -20,6 +20,8 @@ class InDesignAppClass {
     var version: String = ""
     /// ソート用数値（major*1e9 + minor*1e6 + patch*1e3 + build）
     var versionDouble: Double = 0
+    /// 正規版以外（Beta・Prerelease・Debug など）。getAppALL で isBetaFolder により決まる
+    var isBeta: Bool = false
     var isBooted: Bool = false
     var icon: NSImage?
     /// このアプリで開くファイルの URL 配列
@@ -37,9 +39,9 @@ class InDesignApp {
     static let shared = InDesignApp()
     private init() {}
 
-    /// 正規版のみ（Beta・Prerelease 除外）、バージョン昇順
+    /// 正規版のみ（isBeta の版を除外）、バージョン昇順
     var appClassALL: [InDesignAppClass] = []
-    /// Beta・Prerelease を含む全アプリ、バージョン昇順
+    /// 正規版以外（Beta・Prerelease・Debug など）も含む全アプリ、バージョン昇順（同じバージョンなら正規版が先）
     var appClassALLIncludeBeta: [InDesignAppClass] = []
 
     // MARK: - getAppALL
@@ -60,7 +62,6 @@ class InDesignApp {
             guard isDir.boolValue else { continue }
 
             let folderName = entry.lastPathComponent
-            let isBeta = folderName.contains("Beta") || folderName.contains("Prerelease")
 
             // InDesign.app を探す（フォルダ名は "Adobe InDesign 2025" など）
             let appBundleURL = findInDesignApp(in: entry)
@@ -69,18 +70,36 @@ class InDesignApp {
             let ac = InDesignAppClass(appURL: appURL)
             ac.version = getAppVersion(appBundle: appURL)
             ac.versionDouble = versionToDouble(ac.version)
+            ac.isBeta = InDesignApp.isBetaFolder(folderName)
             ac.isBooted = isAppBooted(appURL: appURL)
             ac.icon = NSWorkspace.shared.icon(forFile: appURL.path)
                         .resized(to: NSSize(width: 18, height: 18))
 
             appClassALLIncludeBeta.append(ac)
-            if !isBeta {
+            if !ac.isBeta {
                 appClassALL.append(ac)
             }
         }
 
-        appClassALL.sort { $0.versionDouble < $1.versionDouble }
-        appClassALLIncludeBeta.sort { $0.versionDouble < $1.versionDouble }
+        appClassALL.sort { InDesignApp.isAscending($0, $1) }
+        appClassALLIncludeBeta.sort { InDesignApp.isAscending($0, $1) }
+    }
+
+    /// 正規版のフォルダ名は「Adobe InDesign」＋次のどれかだけのもの。
+    ///   数字（"2026"）／ CC ＋年号（"CC 2019"）／ CC 単体 ／ CS 系（"CS6" "CS5.5" "CS"）
+    /// それ以外（Beta・Prerelease・Debug・InDesign Server・Finder での複製など）はすべて Beta 扱いにする。
+    /// Debug 版は Info.plist が正規版と同一のため、フォルダ名以外に手がかりがない。
+    /// 年号の無い CC・CS 系は 32bit で現行 macOS では起動できないが、念のため正規版として扱う。
+    private static func isBetaFolder(_ folderName: String) -> Bool {
+        folderName.range(of: "^Adobe InDesign (CC( [0-9.]+)?|CS[0-9.]*|[0-9.]+)$",
+                         options: .regularExpression) == nil
+    }
+
+    /// バージョン昇順。同じバージョンなら正規版を先に並べる
+    /// （Debug 版や複製は正規版と同じバージョンになるため、並び順をフォルダの列挙順任せにしない）
+    private static func isAscending(_ a: InDesignAppClass, _ b: InDesignAppClass) -> Bool {
+        if a.versionDouble != b.versionDouble { return a.versionDouble < b.versionDouble }
+        return !a.isBeta && b.isBeta
     }
 
     private func findInDesignApp(in folder: URL) -> URL? {
@@ -209,8 +228,13 @@ class InDesignApp {
         appClassALL.max { $0.versionDouble < $1.versionDouble }
     }
 
+    /// Beta を含む中で最上位バージョン。同じバージョンなら正規版を優先する
+    /// （オフ時の関連付け先が Debug 版や複製にならないように）
     func getMaximumVerAppClassIncludeBeta() -> InDesignAppClass? {
-        appClassALLIncludeBeta.max { $0.versionDouble < $1.versionDouble }
+        appClassALLIncludeBeta.max { a, b in
+            if a.versionDouble != b.versionDouble { return a.versionDouble < b.versionDouble }
+            return a.isBeta && !b.isBeta
+        }
     }
 
     func getMinimumVerAppClass() -> InDesignAppClass? {

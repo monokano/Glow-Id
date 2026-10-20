@@ -225,8 +225,9 @@
 			<string>All Files</string>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
+			<!-- None：ドロップは受け付けるが既定ハンドラにはならない（Alternate だとフォルダのエイリアス等のアイコンが Glow Id の白紙書類アイコンになる） -->
 			<key>LSHandlerRank</key>
-			<string>Alternate</string>
+			<string>None</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.item</string>

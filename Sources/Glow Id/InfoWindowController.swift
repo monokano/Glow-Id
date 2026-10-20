@@ -123,7 +123,7 @@ final class InfoViewModel: ObservableObject {
             let appMajor = Int(parts.first ?? "") ?? 0
             let appMinor = parts.count >= 2 ? (Int(parts[1]) ?? 0) : 0
             let folder = ac.appURL.deletingLastPathComponent().lastPathComponent
-            let isBeta = folder.contains("Beta") || folder.contains("Prerelease")
+            let isBeta = ac.isBeta
 
             var canOpen = false
             if !isBeta {
