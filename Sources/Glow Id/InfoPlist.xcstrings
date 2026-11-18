@@ -13,7 +13,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adobe InDesign ブック"
+            "value" : "Adobe InDesignブック"
           }
         }
       }
@@ -30,7 +30,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adobe InDesign 書類"
+            "value" : "Adobe InDesign書類"
           }
         }
       }
@@ -47,7 +47,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adobe InDesign ライブラリ"
+            "value" : "Adobe InDesignライブラリ"
           }
         }
       }
@@ -81,7 +81,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Adobe InDesign テンプレート"
+            "value" : "Adobe InDesignテンプレート"
           }
         }
       }
@@ -94,18 +94,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Glow Id"
-          }
-        }
-      }
-    },
-    "NSAppleEventsUsageDescription" : {
-      "comment" : "Privacy - AppleEvents Sending Usage Description",
-      "extractionState" : "extracted_with_value",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "To copy icon files from Adobe InDesign with administrator privileges."
           }
         }
       }

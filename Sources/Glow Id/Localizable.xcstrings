@@ -1,12 +1,45 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ (current)" : {
+      "comment" : "Preferences: radio button title of the app currently associated",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@（現在）"
+          }
+        }
+      }
+    },
+    "Adobe InDesign (not installed)" : {
+      "comment" : "Preferences: radio button title when no release version of InDesign is installed",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesign（見つかりません）"
+          }
+        }
+      }
+    },
     "Allow opening in higher version" : {
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "上位バージョンで開くのを許可する"
+          }
+        }
+      }
+    },
+    "Already associated with %@." : {
+      "comment" : "Preferences: status when the files are already associated with the chosen app",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すでに%@に関連付けられています。"
           }
         }
       }
@@ -32,7 +65,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "別バージョンの InDesign が\n起動しています"
+            "value" : "別バージョンのInDesignが\n起動しています"
           }
         }
       }
@@ -47,12 +80,35 @@
         }
       }
     },
-    "Associate file types on launch (.indd / .indt / .indb / .indl / .idml)" : {
+    "Associate" : {
+      "comment" : "Preferences: button to change the file association",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "起動時に関連付けをする（.indd / .indt / .indb / .indl / .idml）"
+            "value" : "関連付ける"
+          }
+        }
+      }
+    },
+    "Associated with %@." : {
+      "comment" : "Preferences: status after the file association was changed",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@に関連付けました。"
+          }
+        }
+      }
+    },
+    "Back" : {
+      "comment" : "Help window toolbar: go back (accessibility name)",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "戻る"
           }
         }
       }
@@ -67,22 +123,35 @@
         }
       }
     },
-    "Change Log" : {
+    "Choose the app that opens when you double-click a file." : {
+      "comment" : "Preferences: note under the file association heading",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "更新履歴"
+            "value" : "ダブルクリックしたときに開くアプリを選びます。"
           }
         }
       }
     },
-    "Do not notify about file icon import" : {
+    "Continue Anyway" : {
+      "comment" : "Translocation alert button",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ファイルアイコン取り込みを通知しない"
+            "value" : "このまま続ける"
+          }
+        }
+      }
+    },
+    "Copies the .indd, .indt, .indb, .indl, and .idml icons from %@ into Glow Id, so files associated with Glow Id also show the latest InDesign icons." : {
+      "comment" : "Preferences: note under the file icons heading (%@ = InDesign name)",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@の.indd／.indt／.indb／.indl／.idmlのアイコンをGlow Idに取り込みます。Glow Idに関連付けたファイルのアイコンをInDesignの最新アイコンにするためです。"
           }
         }
       }
@@ -107,13 +176,46 @@
         }
       }
     },
-    "Failed to import icon files from InDesign %@" : {
-      "extractionState" : "stale",
+    "File association (.indd / .indt / .indb / .indl / .idml)" : {
+      "comment" : "Preferences: section heading",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InDesign %@ からアイコンファイルを取得できませんでした"
+            "value" : "ファイルの関連付け（.indd／.indt／.indb／.indl／.idml）"
+          }
+        }
+      }
+    },
+    "File icons" : {
+      "comment" : "Preferences: section heading",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルアイコン"
+          }
+        }
+      }
+    },
+    "For security, macOS runs apps obtained from the internet from a copy in a temporary location until you move them in the Finder." : {
+      "comment" : "Translocation alert, 2nd paragraph",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOSは安全のため、インターネットから入手したアプリをFinderで移動するまでは、元の場所ではなく一時的な場所に置いたコピーから起動します。"
+          }
+        }
+      }
+    },
+    "Forward" : {
+      "comment" : "Help window toolbar: go forward (accessibility name)",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "進む"
           }
         }
       }
@@ -123,13 +225,10 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "フルバージョン （ドキュメントヒストリー）"
+            "value" : "フルバージョン（ドキュメントヒストリー）"
           }
         }
       }
-    },
-    "GitHub Releases" : {
-
     },
     "Glow Id - Notification" : {
       "localizations" : {
@@ -141,22 +240,13 @@
         }
       }
     },
-    "Glow Id cannot write to its current location. Move it to the Applications folder (or the Applications folder in your home folder) and open it again." : {
+    "Glow Id can't be changed because it's owned by the system." : {
+      "comment" : "Preferences: why the icons can't be imported (root owned)",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glow Id は現在の場所に書き込めません。「アプリケーション」フォルダ（または、ホームフォルダ内の「アプリケーション」フォルダ）へ移動してから、もう一度開いてください。"
-          }
-        }
-      }
-    },
-    "Glow Id could not update its file icons" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Glow Id はファイルアイコンを更新できませんでした"
+            "value" : "Glow Idがシステムの所有になっているため、取り込めません。"
           }
         }
       }
@@ -168,17 +258,29 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glow Id ヘルプ"
+            "value" : "Glow Idヘルプ"
           }
         }
       }
     },
-    "Glow Id is running from a temporary, read-only location, so it cannot update its file icons. Quit Glow Id, move it to the Applications folder using the Finder, and open it again." : {
+    "Glow Id is in the Applications folder, but it was placed there without being moved in the Finder, for example by unzipping it there. Quit Glow Id, move it to the Desktop in the Finder, move it back to the Applications folder, and then open it again." : {
+      "comment" : "Translocation alert, 3rd paragraph (original location is inside the Applications folder)",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glow Id が一時的な読み取り専用の場所から起動しているため、ファイルアイコンを更新できません。Glow Id を終了し、Finder で「アプリケーション」フォルダへ移動してから、もう一度開いてください。"
+            "value" : "Glow Idはアプリケーションフォルダにありますが、そこでZIPを展開した場合など、Finderで移動せずに置かれています。Glow Idを終了し、Finderでいったんデスクトップへ移動してからアプリケーションフォルダへ戻し、もう一度開いてください。"
+          }
+        }
+      }
+    },
+    "Glow Id is running from a temporary location because it was opened right after being downloaded." : {
+      "comment" : "Translocation alert, 1st paragraph",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ダウンロードした直後のため、Glow Idは一時的な場所から起動しています。"
           }
         }
       }
@@ -188,17 +290,40 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glow Id 設定"
+            "value" : "Glow Id設定"
           }
         }
       }
     },
-    "Icon files imported from InDesign %@" : {
+    "Help" : {
+      "comment" : "Dock menu: opens the help window",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InDesign %@ からアイコンファイルを取得しました"
+            "value" : "ヘルプ"
+          }
+        }
+      }
+    },
+    "Import Icons" : {
+      "comment" : "Preferences: button to import the document icons from InDesign",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アイコンを取り込む"
+          }
+        }
+      }
+    },
+    "Imported the icons from %@." : {
+      "comment" : "Preferences: status after importing the icons",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@のアイコンを取り込みました。"
           }
         }
       }
@@ -208,7 +333,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InDesign ブック（.indb）"
+            "value" : "InDesignブック（.indb）"
           }
         }
       }
@@ -218,7 +343,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InDesign ドキュメント（.indd）"
+            "value" : "InDesignドキュメント（.indd）"
           }
         }
       }
@@ -228,7 +353,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InDesign ライブラリ（.indl）"
+            "value" : "InDesignライブラリ（.indl）"
           }
         }
       }
@@ -248,7 +373,18 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InDesign テンプレート（.indt）"
+            "value" : "InDesignテンプレート（.indt）"
+          }
+        }
+      }
+    },
+    "macOS security may prevent this change. In the Finder, select a .indd, .indt, .indb, .indl, or .idml file, choose Get Info, choose the app in \"Open with\", and click \"Change All…\"." : {
+      "comment" : "Alert: informative text when the file association was not applied",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "macOSのセキュリティにより変更されないことがあります。Finderで.indd／.indt／.indb／.indl／.idmlファイルを選んで「情報を見る」を開き、「このアプリケーションで開く」でアプリを選んで「すべてを変更」をクリックしてください。"
           }
         }
       }
@@ -258,7 +394,51 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "メジャー＋マイナー （ヘッダー）"
+            "value" : "メジャー＋マイナー（ヘッダー）"
+          }
+        }
+      }
+    },
+    "Move Glow Id again in the Finder" : {
+      "comment" : "Translocation alert title (original location is inside the Applications folder)",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow IdをFinderで移動し直してください"
+          }
+        }
+      }
+    },
+    "Move Glow Id to the Applications folder" : {
+      "comment" : "Translocation alert title",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Idをアプリケーションフォルダへ移動してください"
+          }
+        }
+      }
+    },
+    "Move Glow Id to the Applications folder, then open it again." : {
+      "comment" : "Preferences: why the icons can't be imported (App Translocation)",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Idをアプリケーションフォルダに移動して、開き直してください。"
+          }
+        }
+      }
+    },
+    "No Adobe InDesign icons were found." : {
+      "comment" : "Preferences: why the icons can't be imported",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adobe InDesignのアイコンが見つかりません。"
           }
         }
       }
@@ -274,7 +454,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "同じメジャーバージョンの\nInDesign がありません"
+            "value" : "同じメジャーバージョンの\nInDesignがありません"
           }
         }
       }
@@ -290,7 +470,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "マイナーバージョンが一致している\nInDesign がありません"
+            "value" : "マイナーバージョンが一致している\nInDesignがありません"
           }
         }
       }
@@ -300,7 +480,18 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InDesign ファイルではありません"
+            "value" : "InDesignファイルではありません"
+          }
+        }
+      }
+    },
+    "Only some file types were associated with %@." : {
+      "comment" : "Preferences: status when the user kept the current app for some file types",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一部の種類だけ%@に関連付けました。"
           }
         }
       }
@@ -320,7 +511,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ で開く"
+            "value" : "%@で開く"
           }
         }
       }
@@ -331,36 +522,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "開く…"
-          }
-        }
-      }
-    },
-    "Part of Glow Id is owned by the administrator, so it cannot update its file icons. Move Glow Id to the Trash, download the latest version, and install it again." : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Glow Id の一部が管理者（root）の所有になっているため、ファイルアイコンを更新できません。Glow Id をゴミ箱に入れ、最新版をダウンロードして入れ直してください。"
-          }
-        }
-      }
-    },
-    "Please move Glow Id to the Applications folder" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Glow Id を「アプリケーション」フォルダへ移動してください"
-          }
-        }
-      }
-    },
-    "Please reinstall Glow Id" : {
-      "localizations" : {
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Glow Id を入れ直してください"
           }
         }
       }
@@ -385,6 +546,28 @@
         }
       }
     },
+    "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again." : {
+      "comment" : "Translocation alert, 3rd paragraph",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Idを終了し、Finderでアプリケーションフォルダへ移動してから、もう一度開いてください。"
+          }
+        }
+      }
+    },
+    "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again. If it's already in the Applications folder, move it to the Desktop and back again in the Finder." : {
+      "comment" : "Translocation alert, 3rd paragraph (original location unknown)",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Idを終了し、Finderでアプリケーションフォルダへ移動してから、もう一度開いてください。すでにアプリケーションフォルダにある場合は、Finderでいったんデスクトップへ移動してから戻してください。"
+          }
+        }
+      }
+    },
     "Status" : {
       "localizations" : {
         "ja" : {
@@ -405,6 +588,61 @@
         }
       }
     },
+    "The file association was kept as it is." : {
+      "comment" : "Preferences: status when the user chose to keep the current app in the macOS confirmation",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "関連付けは変更していません。"
+          }
+        }
+      }
+    },
+    "The file association was not changed." : {
+      "comment" : "Alert: title when the file association was not applied",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルの関連付けが変更されませんでした。"
+          }
+        }
+      }
+    },
+    "The icons couldn't be imported." : {
+      "comment" : "Preferences: status when importing the icons failed",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アイコンを取り込めませんでした。"
+          }
+        }
+      }
+    },
+    "The icons in Glow Id are up to date." : {
+      "comment" : "Preferences: status when the icons in Glow Id are the same as InDesign's",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Glow Idの中にあるアイコンは最新です。"
+          }
+        }
+      }
+    },
+    "To import icons, log in with an administrator account." : {
+      "comment" : "Preferences: why the icons can't be imported (not writable)",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り込むには、管理者のアカウントでログインしてください。"
+          }
+        }
+      }
+    },
     "Version" : {
       "localizations" : {
         "ja" : {
@@ -415,12 +653,13 @@
         }
       }
     },
-    "Version detection for InDesign documents (.indd):" : {
+    "Version detection (.indd)" : {
+      "comment" : "Preferences window: section header for the version detection mode of InDesign documents",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "InDesign ドキュメント（.indd）の検出バージョン："
+            "value" : "検出バージョン（.indd）"
           }
         }
       }
@@ -437,6 +676,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "バージョン情報を\n検出できませんでした"
+          }
+        }
+      }
+    },
+    "Waiting for confirmation…" : {
+      "comment" : "Preferences: status while waiting for the macOS confirmation",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "確認を待っています…"
+          }
+        }
+      }
+    },
+    "When Opening Files" : {
+      "comment" : "Preferences window: section header for the option about opening files",
+      "localizations" : {
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ファイルを開くとき"
           }
         }
       }

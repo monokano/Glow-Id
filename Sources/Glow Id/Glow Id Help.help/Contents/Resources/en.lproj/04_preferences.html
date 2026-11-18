@@ -21,21 +21,6 @@
   To show the Notification Window just once without changing this setting, hold <kbd>⌘</kbd> (Command) while opening the file (or choose Open from the right-click menu).
 </div>
 
-<h2>Associate file types on launch (.indd / .indt / .indb / .indl / .idml)</h2>
-<p>Default: On</p>
-<p><strong>When on:</strong> Every time Glow Id launches, it re-registers itself as the default app for .indd / .indt / .indb / .indl / .idml files. Double-clicking those files will launch Glow Id. If another app changes the association, Glow Id automatically reclaims it on the next launch.</p>
-<p><strong>When turned off:</strong> At the moment you turn it off, the association is changed to the highest installed version of InDesign (including Beta and Prerelease). Double-clicking those files will launch that InDesign directly, bypassing Glow Id. Use this setting when you want to restore the normal InDesign file association without going through Glow Id.</p>
-
-<div class="note">
-  <strong>Tip</strong>
-  If double-clicking no longer launches Glow Id, check whether this option has been turned off. Turning it back on immediately re-associates the file types with Glow Id.
-</div>
-
-<h2>Do not notify about file icon import</h2>
-<p>When on, the completion message shown after importing InDesign file icons on launch is suppressed. The icon import itself still takes place as usual.</p>
-<p>The guidance shown when an import cannot be completed (such as “Please move Glow Id to the Applications folder”) is displayed regardless of this setting.</p>
-<p>Default: off (notify on import)</p>
-
 <h2>InDesign Document (.indd) Detection Version</h2>
 <p>Controls how version information is read from .indd / .indt files and how it is displayed in the Notification Window.</p>
 <dl>
@@ -60,5 +45,33 @@
   <dt>IDML (.idml)</dt>
   <dd>No version matching. The Notification Window always appears so you can choose which version to open.</dd>
 </dl>
+
+<h2 id="association">File association (.indd / .indt / .indb / .indl / .idml)</h2>
+<p>Choose the app that opens .indd / .indt / .indb / .indl / .idml files when you double-click them — Glow Id or Adobe InDesign — and click <strong>Associate</strong>. InDesign here means the latest installed release version on macOS Tahoe 26.3 and earlier, and the latest installed version including Beta and Prerelease on macOS Tahoe 26.4 and later.</p>
+<p>The app that is currently associated is marked “(current)”.</p>
+<p>On macOS Tahoe 26.3 and earlier, clicking <strong>Associate</strong> changes the association right away.</p>
+<p>On macOS Tahoe 26.4 and later, when you click <strong>Associate</strong>, macOS asks you to confirm the change for each document type.</p>
+<ul>
+  <li>If you choose to change to the selected app, the association changes.</li>
+  <li>If you choose to keep the current app, the association does not change, and the remaining document types are not asked about.</li>
+</ul>
+<p>If the association does not change even though you did not choose to keep the current app, Glow Id shows how to associate the files in the Finder (see <a href="02_howto.html#association">Associating Files for Double-Clicking</a>).</p>
+<p>On macOS Tahoe 26.4 and later, to associate the files with a release version of InDesign instead of a Beta, associate them in the Finder. On macOS Tahoe 26.3 and earlier, to associate them with a Beta, also use the Finder.</p>
+<p>Glow Id never changes file associations on its own.</p>
+
+<h2 id="icons">File icons</h2>
+<p>Click <strong>Import Icons</strong> to copy the .indd / .indt / .indb / .indl / .idml icons from the latest installed release version of InDesign into Glow Id. Files associated with Glow Id then also show the latest InDesign icons.</p>
+<p>When the icons in Glow Id are the same as that InDesign’s icons, “The icons in Glow Id are up to date.” is shown. After you update InDesign, import the icons again. Glow Id does not import icons automatically on launch.</p>
+<p><strong>Import Icons</strong> is unavailable, and the reason is shown, in these cases:</p>
+<ul>
+  <li>You are using a non-administrator account and Glow Id was installed by an administrator. Importing from an administrator account applies the icons for every account on that Mac.</li>
+  <li>Glow Id is running directly from where it was unzipped, such as the Downloads folder. Move Glow Id to the Applications folder and open it again.</li>
+  <li>The InDesign icons cannot be found.</li>
+</ul>
+
+<div class="note">
+  <strong>Note</strong>
+  When <strong>Show icon preview</strong> is on in the Finder’s view options, file icons show a preview of the file’s contents. Turn off <strong>Show icon preview</strong> to show the InDesign file icons.
+</div>
 </body>
 </html>

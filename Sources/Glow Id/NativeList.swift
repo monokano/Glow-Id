@@ -74,6 +74,8 @@ extension NativeListColumn {
 /// - showHeader: false でヘッダを非表示。
 /// - bounces: false でスクロールバウンスを無効。
 /// - hasBorder: true でベゼルボーダーを表示。
+/// - cardStyle: true でカード表示（ストライプ・背景なし、角丸の選択、行間の細線）。
+///   カードの地（`NSColor.listCardFill` の角丸）は呼び出し側で背景に敷く。
 struct NativeList<Item: Identifiable>: NSViewRepresentable {
     let columns: [NativeListColumn<Item>]
     let items: [Item]
@@ -87,6 +89,7 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
     var hasBorder: Bool = false
     var showColumnDividers: Bool = false
     var showRowDividers: Bool = false
+    var cardStyle: Bool = false
 
     func makeCoordinator() -> Coordinator { Coordinator(columns: columns) }
 
@@ -94,7 +97,8 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
         let tv = NSTableView()
         tv.dataSource = context.coordinator
         tv.delegate = context.coordinator
-        tv.usesAlternatingRowBackgroundColors = true
+        tv.usesAlternatingRowBackgroundColors = !cardStyle
+        if cardStyle { tv.backgroundColor = .clear }
         tv.style = .fullWidth
         tv.intercellSpacing = .zero
         tv.focusRingType = .none
@@ -132,10 +136,12 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
         sv.verticalScrollElasticity = bounces ? .automatic : .none
         sv.horizontalScrollElasticity = .none
         sv.borderType = hasBorder ? .bezelBorder : .noBorder
+        if cardStyle { sv.drawsBackground = false }
         sv.automaticallyAdjustsContentInsets = false
         sv.contentInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
         context.coordinator.fontSize = fontSize
+        context.coordinator.cardStyle = cardStyle
         context.coordinator.tableView = tv
         return sv
     }
@@ -181,6 +187,9 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
         var selectionChanged: ((Item.ID?) -> Void)?
         var isUpdating = false
         var fontSize: CGFloat = NSFont.systemFontSize
+        var cardStyle = false
+        /// セル左端の余白（カード表示は角丸の選択の内側に収めるため広め）
+        private var cellLeading: CGFloat { cardStyle ? 8 : 4 }
         weak var tableView: NSTableView?
 
         init(columns: [NativeListColumn<Item>]) { self.columns = columns }
@@ -210,6 +219,10 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
             sortedItems = sorted(sourceItems, by: tableView.sortDescriptors)
             tableView.reloadData()
             isUpdating = false
+        }
+
+        func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+            cardStyle ? CardRowView() : nil
         }
 
         func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -258,7 +271,7 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
                 field.translatesAutoresizingMaskIntoConstraints = false
                 cellView.addSubview(field); cellView.textField = field
                 NSLayoutConstraint.activate([
-                    field.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 4),
+                    field.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: cellLeading),
                     field.trailingAnchor.constraint(equalTo: cellView.trailingAnchor, constant: -4),
                     field.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
                 ])
@@ -290,7 +303,7 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
                 cellView.addSubview(imageView); cellView.addSubview(field)
                 cellView.imageView = imageView; cellView.textField = field
                 NSLayoutConstraint.activate([
-                    imageView.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: 4),
+                    imageView.leadingAnchor.constraint(equalTo: cellView.leadingAnchor, constant: cellLeading),
                     imageView.centerYAnchor.constraint(equalTo: cellView.centerYAnchor),
                     imageView.widthAnchor.constraint(equalToConstant: col.iconSize),
                     imageView.heightAnchor.constraint(equalToConstant: col.iconSize),
@@ -313,6 +326,8 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
             guard !isUpdating, let tv = notification.object as? NSTableView else { return }
             let row = tv.selectedRow
             selectionChanged?(row >= 0 && row < sortedItems.count ? sortedItems[row].id : nil)
+            // カード表示：選択行の上下の細線を消すため、全行を描き直す
+            if cardStyle { tv.enumerateAvailableRowViews { rv, _ in rv.needsDisplay = true } }
             // customView の選択表示を更新するため再描画
             let customColIndices = columns.indices.filter { columns[$0].customView != nil }
             if !customColIndices.isEmpty {
@@ -328,6 +343,47 @@ struct NativeList<Item: Identifiable>: NSViewRepresentable {
             onDoubleClick?(sortedItems[row])
         }
     }
+}
+
+// MARK: - カード表示
+
+extension NSColor {
+    /// リストを載せるカードの塗り。
+    /// - macOS 26 以降（地がほぼ白）：地に半透明を重ねる（ライト＝黒 8/255、ダーク＝白 8/255。
+    ///   SwiftUI の Form(.grouped) のカードと同じ濃さ）。
+    /// - macOS 15 まで（地がグレー）：従来のリストと同じ背景色（ライトは白）。
+    static let listCardFill: NSColor = {
+        guard #available(macOS 26, *) else { return .controlBackgroundColor }
+        return NSColor(name: nil) { appearance in
+            appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+                ? NSColor(white: 1, alpha: 8.0 / 255)
+                : NSColor(white: 0, alpha: 8.0 / 255)
+        }
+    }()
+}
+
+/// カード表示の行。角丸の選択と、行の下の細線を自前で描く。
+private final class CardRowView: NSTableRowView {
+    override func drawBackground(in dirtyRect: NSRect) {
+        // 行の下の細線（最終行の下にも描く。選択行の上下には描かない）
+        guard let tv = superview as? NSTableView else { return }
+        let row = tv.row(for: self)
+        guard row >= 0, !isSelected else { return }
+        if row + 1 < tv.numberOfRows, tv.isRowSelected(row + 1) { return }
+        NSColor.separatorColor.setFill()
+        let inset: CGFloat = 10
+        NSRect(x: inset, y: bounds.maxY - 1, width: bounds.width - inset * 2, height: 1).fill()
+    }
+
+    override func drawSelection(in dirtyRect: NSRect) {
+        (isEmphasized ? NSColor.selectedContentBackgroundColor
+                      : NSColor.unemphasizedSelectedContentBackgroundColor).setFill()
+        NSBezierPath(roundedRect: bounds.insetBy(dx: 4, dy: 1), xRadius: 6, yRadius: 6).fill()
+    }
+
+    // 選択・強調の切り替えで細線と塗りを描き直す
+    override var isSelected: Bool { didSet { needsDisplay = true } }
+    override var isEmphasized: Bool { didSet { needsDisplay = true } }
 }
 
 // MARK: - CompactHeaderView

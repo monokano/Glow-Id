@@ -1,4 +1,4 @@
-/* Glow Ai Help Book — Shared Stylesheet */
+/* Glow Id Help Book — Shared Stylesheet */
 
 :root {
     --bg:          #ffffff;
@@ -46,6 +46,7 @@ body {
     background: var(--bg);
     padding: 28px 32px 48px;
     max-width: 720px;
+    text-autospace: normal;  /* 和欧間を自動で空ける（HTML には欧文スペースを入れない） */
 }
 
 /* ── Typography ── */

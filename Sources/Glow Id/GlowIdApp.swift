@@ -32,10 +32,6 @@ struct GlowIdApp: App {
                         appDelegate.openHelp()
                     }
                     .keyboardShortcut("?", modifiers: .command)
-                    Divider()
-                    Button("Change Log") {
-                        appDelegate.openChangeLog()
-                    }
                 }
             }
     }

@@ -205,7 +205,9 @@ final class InfoViewModel: ObservableObject {
         NSWorkspace.shared.runningApplications.filter {
             $0.bundleURL?.standardized == appURL.standardized
         }.forEach {
-            $0.activate(options: .activateIgnoringOtherApps)
+            // 未保存の確認などを前面に出すため、終了させる前にアクティブにする。
+            // macOS 14 で .activateIgnoringOtherApps は廃止（効果なし）になったので activate() を使う
+            $0.activate()
             $0.terminate()
         }
         observeTermination(of: appURL)
@@ -269,13 +271,9 @@ struct InfoView: View {
     let onClose: () -> Void
     @State private var balloonVisible = false
 
-    private var minTableHeight: CGFloat {
-        max(26, CGFloat(max(1, min(vm.tableRows.count, 3))) * 26 - 134)
-    }
-
-    private var minContentHeight: CGFloat {
-        let extraRows = max(0, vm.tableRows.count - 3)
-        return 277 + CGFloat(extraRows) * 26 + 26
+    /// カード（アプリ一覧）の高さ＝行数＋1 行分。上端に 3pt の余白を足す。
+    private var cardHeight: CGFloat {
+        CGFloat(max(1, vm.tableRows.count) + 1) * 26 + 3
     }
 
     var body: some View {
@@ -288,7 +286,6 @@ struct InfoView: View {
             checkboxSection
         }
         .frame(width: 420)
-        .frame(minHeight: minContentHeight)
         .offset(y: -6)
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
@@ -418,11 +415,11 @@ struct InfoView: View {
             rowHeight: 26,
             fontSize: NSFont.systemFontSize,
             bounces: false,
-            hasBorder: true,
-            showColumnDividers: true,
-            showRowDividers: true
+            cardStyle: true
         )
-        .frame(minHeight: minTableHeight, maxHeight: .infinity)
+        .padding(.top, 3)
+        .frame(minHeight: cardHeight, idealHeight: cardHeight, maxHeight: .infinity)
+        .background(RoundedRectangle(cornerRadius: 10).fill(Color(nsColor: .listCardFill)))
         .padding(.horizontal, 16)
     }
 
@@ -500,9 +497,8 @@ class InfoWindowController: NSWindowController {
 
     func showModal() {
         guard let win = window else { return }
-        let rowCount = viewModel?.tableRows.count ?? 0
-        let extraRows = max(0, rowCount - 3)
-        let targetHeight = 304 + CGFloat(extraRows) * 26 + 26
+        // ウインドウの高さは内容に合わせる（カード＝行数＋1 行分。InfoView.cardHeight）
+        let targetHeight = win.contentView?.fittingSize.height ?? 330
         win.setContentSize(NSSize(width: 420, height: targetHeight))
         win.minSize = win.frame.size
         centerWindow(win)
