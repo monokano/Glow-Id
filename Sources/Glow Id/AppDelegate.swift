@@ -229,13 +229,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         switch original.map({ AppTranslocation.isInApplicationsFolder($0) }) {
         case true?:
             title = String(localized: "Move Glow Id again in the Finder")
-            action = String(localized: "Glow Id is in the Applications folder, but it was placed there without being moved in the Finder, for example by unzipping it there. Quit Glow Id, move it to the Desktop in the Finder, move it back to the Applications folder, and then open it again.")
+            action = String(localized: "Glow Id is in the Applications folder, but it was moved there in a way that doesn't meet Apple's requirements. Quit Glow Id, move it to the Desktop in the Finder, move it back to the Applications folder, and then open it again. Also, make sure to move it by itself, not together with other apps.")
         case false?:
             title = String(localized: "Move Glow Id to the Applications folder")
-            action = String(localized: "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again.")
+            action = String(localized: "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again. Also, make sure to move it by itself, not together with other apps.")
         case nil:
             title = String(localized: "Move Glow Id to the Applications folder")
-            action = String(localized: "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again. If it's already in the Applications folder, move it to the Desktop and back again in the Finder.")
+            action = String(localized: "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again. If it's already in the Applications folder, move it to the Desktop and back again in the Finder. Also, make sure to move it by itself, not together with other apps.")
         }
 
         let alert = NSAlert()

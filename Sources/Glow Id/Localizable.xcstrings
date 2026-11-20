@@ -263,13 +263,13 @@
         }
       }
     },
-    "Glow Id is in the Applications folder, but it was placed there without being moved in the Finder, for example by unzipping it there. Quit Glow Id, move it to the Desktop in the Finder, move it back to the Applications folder, and then open it again." : {
+    "Glow Id is in the Applications folder, but it was moved there in a way that doesn't meet Apple's requirements. Quit Glow Id, move it to the Desktop in the Finder, move it back to the Applications folder, and then open it again. Also, make sure to move it by itself, not together with other apps." : {
       "comment" : "Translocation alert, 3rd paragraph (original location is inside the Applications folder)",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glow Idはアプリケーションフォルダにありますが、そこでZIPを展開した場合など、Finderで移動せずに置かれています。Glow Idを終了し、Finderでいったんデスクトップへ移動してからアプリケーションフォルダへ戻し、もう一度開いてください。"
+            "value" : "Glow Idはアプリケーションフォルダにありますが、Appleの条件を満たさない方法で移動されています。Glow Idを終了し、Finderでいったんデスクトップへ移動してからアプリケーションフォルダへ戻し、もう一度開いてください。さらに、ほかのアプリと一緒ではなく、1つずつ移動することにも注意してください。"
           }
         }
       }
@@ -546,24 +546,24 @@
         }
       }
     },
-    "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again." : {
+    "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again. Also, make sure to move it by itself, not together with other apps." : {
       "comment" : "Translocation alert, 3rd paragraph",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glow Idを終了し、Finderでアプリケーションフォルダへ移動してから、もう一度開いてください。"
+            "value" : "Glow Idを終了し、Finderでアプリケーションフォルダへ移動してから、もう一度開いてください。さらに、ほかのアプリと一緒ではなく、1つずつ移動することにも注意してください。"
           }
         }
       }
     },
-    "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again. If it's already in the Applications folder, move it to the Desktop and back again in the Finder." : {
+    "Quit Glow Id, move it to the Applications folder in the Finder, and then open it again. If it's already in the Applications folder, move it to the Desktop and back again in the Finder. Also, make sure to move it by itself, not together with other apps." : {
       "comment" : "Translocation alert, 3rd paragraph (original location unknown)",
       "localizations" : {
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Glow Idを終了し、Finderでアプリケーションフォルダへ移動してから、もう一度開いてください。すでにアプリケーションフォルダにある場合は、Finderでいったんデスクトップへ移動してから戻してください。"
+            "value" : "Glow Idを終了し、Finderでアプリケーションフォルダへ移動してから、もう一度開いてください。すでにアプリケーションフォルダにある場合は、Finderでいったんデスクトップへ移動してから戻してください。さらに、ほかのアプリと一緒ではなく、1つずつ移動することにも注意してください。"
           }
         }
       }

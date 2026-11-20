@@ -28,8 +28,9 @@ class PreferencesWindowController: NSWindowController {
         hosting.sizingOptions = .preferredContentSize
         win.contentViewController = hosting
         model.window = win
-        win.layoutIfNeeded()
-        win.center()
+        // 置く前に内容の高さへ合わせる。仮の高さ（320）のまま置くと、後から下へ伸びてずれる
+        win.setContentSize(hosting.view.fittingSize)
+        placeWindow()
 
         // 開いたまま Finder で関連付けを変えたり InDesign を更新したりしても、
         // 戻ってきたときにボタンの有効／無効が現状に合うよう読み直す
@@ -38,21 +39,76 @@ class PreferencesWindowController: NSWindowController {
         ) { [weak self] _ in
             self?.model.refreshOnBecomeKey()
         }
+        // 閉じたときの位置を覚える（開いたまま終了した場合に備え、動かしたときも覚える）
+        for name in [NSWindow.willCloseNotification, NSWindow.didMoveNotification] {
+            positionObservers.append(NotificationCenter.default.addObserver(
+                forName: name, object: win, queue: .main
+            ) { [weak self] _ in
+                self?.savePosition()
+            })
+        }
     }
 
     private var becomeKeyObserver: NSObjectProtocol?
+    private var positionObservers: [NSObjectProtocol] = []
 
     deinit {
         if let becomeKeyObserver { NotificationCenter.default.removeObserver(becomeKeyObserver) }
+        positionObservers.forEach { NotificationCenter.default.removeObserver($0) }
     }
 
     required init?(coder: NSCoder) { fatalError() }
 
     /// 開くたびに関連付けとアイコンの現状を読み直す（Finder で変えられていることがあるため）
     override func showWindow(_ sender: Any?) {
+        // 閉じている間にディスプレイの構成が変わっていることがあるので、開くたびに画面内へ収め直す
+        if window?.isVisible == false { fitOnScreen() }
         super.showWindow(sender)
         model.refreshOnShow()
     }
+
+    // MARK: 位置（2026-11-19：最後に閉じた位置で開く。ディスプレイからはみ出すなら収める）
+
+    /// ウインドウの左上の点（スクリーン座標）。高さは内容で変わるので、上端の位置で覚える
+    private static let positionKey = "preferencesWindowTopLeft"
+
+    private func placeWindow() {
+        guard let win = window else { return }
+        if let saved = UserDefaults.standard.string(forKey: Self.positionKey) {
+            win.setFrameTopLeftPoint(NSPointFromString(saved))
+            fitOnScreen()
+        } else {
+            win.center()
+        }
+    }
+
+    private func savePosition() {
+        guard let win = window else { return }
+        let topLeft = NSPoint(x: win.frame.minX, y: win.frame.maxY)
+        UserDefaults.standard.set(NSStringFromPoint(topLeft), forKey: Self.positionKey)
+    }
+
+    /// 重なっているディスプレイ（無ければメインのディスプレイ）の、メニューバーと Dock を除いた範囲に収める。
+    /// 画面より高いときはタイトルバーが見えるよう上端を優先する
+    private func fitOnScreen() {
+        guard let win = window else { return }
+        var frame = win.frame
+        let screen = NSScreen.screens
+            .max { $0.visibleFrame.intersection(frame).area < $1.visibleFrame.intersection(frame).area }
+            .flatMap { $0.visibleFrame.intersects(frame) ? $0 : nil }
+            ?? NSScreen.main
+        guard let area = screen?.visibleFrame else { return }
+
+        if frame.maxX > area.maxX { frame.origin.x = area.maxX - frame.width }
+        if frame.minX < area.minX { frame.origin.x = area.minX }
+        if frame.minY < area.minY { frame.origin.y = area.minY }
+        if frame.maxY > area.maxY { frame.origin.y = area.maxY - frame.height }
+        if frame.origin != win.frame.origin { win.setFrameOrigin(frame.origin) }
+    }
+}
+
+private extension NSRect {
+    var area: CGFloat { isNull ? 0 : width * height }
 }
 
 // MARK: - Model
