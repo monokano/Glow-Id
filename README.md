@@ -1,4 +1,4 @@
-![Aver screenshot](img/icon.png)
+![Glow Id icon](img/icon.png)
 
 # Glow Id
 
@@ -12,7 +12,7 @@ InDesign ファイルは、下位バージョンの InDesign で開けません�
 
 Glow Id は、ファイルの内部に記録されている作成バージョンを読み取り、同じバージョンの InDesign を選んで自動的に開きます。
 
-![Aver screenshot](img/window-340.png)
+![Glow Id screenshot](img/window-340.png)
 
 ## 使い方
 
@@ -20,18 +20,18 @@ Glow Id は、ファイルの内部に記録されている作成バージョン
 
 .indd / .indt / .indb / .indl / .idml ファイルを Glow Id に関連付けておくと、ファイルをダブルクリックするだけで Glow Id が起動し、バージョンを判定して適切な InDesign で開くようになります。
 
-1. Glow Idを起動し、Docoメニューから「設定...」を選択
-2. 設定の「ファイルの関連付け」でGlow Idを選択し、「関連付ける」ボタンを押す
-3. 「アイコンを取り込む」ボタンが押せる状態なら押す
+1. Glow Idを起動し、Dockメニューから「設定…」を選択します
+2. 設定の「ファイルの関連付け」でGlow Idを選択し、「関連付ける」ボタンを押します
+3. 「アイコンを取り込む」ボタンが押せる状態なら押します
 
 この操作で関連付けが変わらない場合は、Finder で .indd ファイルを選んで「情報を見る」を開き、「このアプリケーションで開く」で Glow Id を選んで「すべてを変更…」をクリックしてください。.indt / .indb / .indl / .idml ファイルでも同じ操作をします。
 
 ### 使う
 
-1. .indd / .indt / .indb / .indl / .idml ファイルをダブルクリックします。
-2. Glow Id が起動し、ファイルのバージョンを判定します。
-	- バージョンが一致する InDesign が見つかれば、自動的にその InDesign で開きます。
-	- バージョンが一致する InDesign がない場合や、ユーザの確認を要する場合は、通知ウインドウが表示されます。
+1. .indd / .indt / .indb / .indl / .idml ファイルをダブルクリックします
+2. Glow Id が起動し、ファイルのバージョンを判定します
+	- バージョンが一致する InDesign が見つかれば、自動的にその InDesign で開きます
+	- バージョンが一致する InDesign がない場合や、ユーザーの確認を要する場合は、通知ウインドウが表示されます
 
 詳細は、Glow Id のヘルプメニュー「Glow Idヘルプ」を選択してください。
 
